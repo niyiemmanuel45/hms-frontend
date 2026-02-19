@@ -1,0 +1,230 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                <a [routerLink]='["/feed/hospital/config", organization.id]' class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+                <button type="submit" data-toggle="modal" data-target="#addModal" class="btn btn-success" *ngIf="userRoleStatus == 'power_user'" style="float:right"><i class="fa fa-plus"> </i> Add New Beneficiary</button>
+              </div><br/>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                          <div class="form-group">
+                              <label for="inputEmail3">Show</label>
+                              <select class="form-control" (change)="onPageSizeChange($event, orgId)" id="styled-select" >
+                                  <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                              <div class="input-group">
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>Line Items</th>
+                                  <th>Name</th>
+                                  <th>Account No</th>
+                                  <th>Bank Code</th>
+                                  <th>Amount</th>
+                                  <th>Deduct From</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container *ngIf="(beneficiaries.length > 0); else elseBlock">
+                                  <tr *ngFor="let item of beneficiaries | paginate : {
+                                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                      totalItems: pagination.count
+                                  }; let i = index">
+                                      <td>{{item.lineItemsId}}</td>
+                                      <td>{{item.beneficiaryName}}</td>
+                                      <td>{{item.beneficiaryAccount}}</td>
+                                      <td>{{item.bankCode}}</td>
+                                      <td>{{item.beneficiaryAmount}}</td>
+                                      <td>{{item.deductFeeFrom}}</td>
+                                      <td>
+                                        <button type="submit" data-toggle="modal" data-target="#editModal" (click)="showBeneficiary(item)" class="btn btn-primary" *ngIf="userRoleStatus == 'power_user'"><i class="fa fa-edit"></i></button> |
+                                        <button type="button" (click)="deleteBeneficiary(item)" class="btn btn-danger" *ngIf="userRoleStatus == 'power_user'"><i class="fa fa-trash"></i></button>
+                                      </td>
+                                  </tr>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                  <tr>
+                                      <td colspan="7" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                                  </tr>
+                              </ng-template>
+                          </tbody>
+                      </table>
+                  </div>
+                  <pagination-controls class="paginate-style"
+                      (pageChange)="onPageChange($event, orgId)">
+                  </pagination-controls>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+<!-- Add Modal-->
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Create Beneficiary</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="insertForm" (ngSubmit)="AddGetAllBeneficiary()" autocomplete="off">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Beneficiary Name<br/>
+                    <small><font color="blue">Name of Beneficiary in the split payment </font></small></label>
+                    <input type="text" formControlName="name" class="form-control boxs-style" id="exampleInputEmail1">
+                    <div *ngIf="name.touched && name.errors" class="errorMessage">
+                        <span *ngIf="name.hasError('required')">Beneficiary name is required.</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Beneficiary Account Number<br/>
+                    <small><font color="blue">Account Number to which Beneficiary will be receiving their share of the payment</font></small></label>
+                    <input type="text" formControlName="accountNumber" class="form-control boxs-style">
+                    <div *ngIf="accountNumber.touched && accountNumber.errors" class="errorMessage">
+                      <span *ngIf="accountNumber.hasError('required')">Beneficiary account number is required.</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Bank Code<br/>
+                    <small>
+                      <font color="blue">Bank code for Account Number of Beneficiary in the split payment e.g
+                          for GTB => 058, UBA => 033, Zenith => 057, Access => 044, etc
+                      </font>
+                    </small></label>
+                    <input type="text" formControlName="bankCode" class="form-control boxs-style">
+                    <div *ngIf="bankCode.touched && bankCode.errors" class="errorMessage">
+                      <span *ngIf="bankCode.hasError('required')">Bank code is required.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Line Item<br/>
+                    <small>
+                        <font color="blue">Your unique identifier for each line item. A line item being the relevant details of a beneficiary in the split payment
+                            e.g itemid1, itemid2, etc
+                        </font>
+                    </small></label>
+                    <input type="text" formControlName="lineItemsId" class="form-control boxs-style">
+                    <div *ngIf="lineItemsId.touched && lineItemsId.errors" class="errorMessage">
+                      <span *ngIf="lineItemsId.hasError('required')">Line item is required.</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Amount<br/>
+                    <small>
+                      <font color="blue">Amount from the Total Invoiced amount to be paid to beneficiary and it should be in decimal. e.g for 70% is 0.7</font>
+                    </small></label>
+                    <input type="numeric" formControlName="amount" class="form-control boxs-style">
+                    <div *ngIf="amount.touched && amount.errors" class="errorMessage">
+                      <span *ngIf="amount.hasError('required')">Amount is required.</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Deduct Fee From<br/>
+                    <small>
+                      <font color="blue"> Value should be '1' or '0'. '1' if the beneficiary in question will be bearing the transaction fees.
+                          Transaction fees can only be borne by one beneficiary</font>
+                    </small></label>
+                    <input type="numeric" formControlName="deductFeeFrom" class="form-control boxs-style">
+                    <div *ngIf="deductFeeFrom.touched && deductFeeFrom.errors" class="errorMessage">
+                      <span *ngIf="deductFeeFrom.hasError('required')">Deduct Fee From is required.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="ModalClose" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success">Create</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Update Beneficiary</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="beneficiaryDetail" (ngSubmit)="updateBeneficiary()" autocomplete="off">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Beneficiary Name<br/>
+                    <small><font color="blue">Name of Beneficiary in the split payment </font></small></label>
+                    <input type="text" formControlName="beneficiaryName" class="form-control boxs-style" id="exampleInputEmail1">
+                    <input type="hidden" class="form-control" id="exampleInputEmail1" formControlName="id" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Beneficiary Account Number<br/>
+                    <small><font color="blue">Account Number to which Beneficiary will be receiving their share of the payment</font></small></label>
+                    <input type="text" formControlName="beneficiaryAccount" class="form-control boxs-style">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Bank Code<br/>
+                    <small>
+                      <font color="blue">Bank code for Account Number of Beneficiary in the split payment e.g
+                          for GTB => 058, UBA => 033, Zenith => 057, Access => 044, etc
+                      </font>
+                    </small></label>
+                    <input type="text" formControlName="bankCode" class="form-control boxs-style">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Line Item<br/>
+                    <small>
+                        <font color="blue">Your unique identifier for each line item. A line item being the relevant details of a beneficiary in the split payment
+                            e.g itemid1, itemid2, etc
+                        </font>
+                    </small></label>
+                    <input type="text" formControlName="lineItemsId" class="form-control boxs-style">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Amount<br/>
+                    <small>
+                      <font color="blue">Amount from the Total Invoiced amount to be paid to beneficiary and it should be in decimal. e.g for 70% is 0.7</font>
+                    </small></label>
+                    <input type="numeric" formControlName="beneficiaryAmount" class="form-control boxs-style">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Deduct Fee From<br/>
+                    <small>
+                      <font color="blue"> Value should be '1' or '0'. '1' if the beneficiary in question will be bearing the transaction fees.
+                          Transaction fees can only be borne by one beneficiary</font>
+                    </small></label>
+                    <input type="numeric" formControlName="deductFeeFrom" class="form-control boxs-style">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Back</button>
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>

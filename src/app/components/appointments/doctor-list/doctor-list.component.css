@@ -1,0 +1,7 @@
+.calendar-container {
+  max-width: 600px;
+  margin: 0px auto;
+}
+a:hover {
+  cursor: pointer;
+}

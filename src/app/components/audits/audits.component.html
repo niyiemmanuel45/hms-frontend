@@ -1,0 +1,140 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <h4 class="panel-title">Audit</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                          <div class="form-group">
+                              <label for="inputEmail3">Show</label>
+                              <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+                                  <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                              <div class="input-group">
+                                  <input type="text" (keyup)="Filter($event)" class="form-control input-search" placeholder="Search by created by...">
+                                  <span class="input-group-btn">
+                                      <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <th>Action</th>
+                                  <th>IP Address</th>
+                                  <th>Operation Performed</th>
+                                  <th *ngIf="(appid === 'HPD')">Tenant</th>
+                                  <th>Created At</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container *ngIf="(audits.length > 0); else elseBlock">
+                                  <tr *ngFor="let item of audits | paginate : {
+                                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                      totalItems: pagination.count
+                                  }; let i = index">
+                                      <th scope="row">{{ (pagination.page - 1) * pagination.pageSize + i + 1 }}</th>
+                                      <td>{{item.action}}</td>
+                                      <td>{{item.ipAddress}}</td>
+                                      <td>{{item.operationPerformed}}</td>
+                                      <td *ngIf="(appid === 'HPD')">{{item.tenantId}}</td>
+                                      <td>{{item.createdDate | date: 'dd MMM yyyy'}}</td>
+                                      <td>
+                                        <button type="submit" data-toggle="modal" data-target="#editModal" title="More Details" (click)="show(item)" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                      </td>
+                                  </tr>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                  <tr>
+                                      <td colspan="7" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                                  </tr>
+                              </ng-template>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div style="float:right" *ngIf="(audits.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Bed</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="empDetail">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Action</label>
+                <input type="text" class="form-control" id="exampleInputEmail2" formControlName="action" readonly style="background-color: #fff;">
+              </div>             
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">IP Address</label>
+                <input type="text" class="form-control" id="exampleInputEmail2" formControlName="ipAddress" readonly style="background-color: #fff;">
+              </div>             
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Hospital Code</label>
+                <input type="text" class="form-control" id="exampleInputEmail2" formControlName="tenantId" readonly style="background-color: #fff;">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Created By</label>
+                <input type="text" class="form-control" id="exampleInputEmail2" formControlName="createdBy" readonly style="background-color: #fff;">
+              </div>              
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Created At</label>
+                <input type="text" class="form-control" id="exampleInputEmail2" formControlName="createdDate" readonly style="background-color: #fff;">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Operation Performed</label>
+            <textarea type="text" class="form-control" rows="4" cols="50" formControlName="operationPerformed" readonly style="background-color: #fff;"></textarea>
+            <input type="hidden" class="form-control" id="exampleInputEmail2" formControlName="id">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Payload</label>
+            <textarea type="text" class="form-control" rows="4" cols="50" formControlName="customDatas" readonly style="background-color: #fff;"></textarea>
+            <input type="hidden" class="form-control" id="exampleInputEmail2" formControlName="id">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

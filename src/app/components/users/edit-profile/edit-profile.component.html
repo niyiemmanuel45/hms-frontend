@@ -1,0 +1,115 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-3">
+          <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                  <div class="text-center">
+                      <a [routerLink]='["/feed/change-avatar", user.userId]' title="Change Avatar"><img class="profile-user-img img-fluid img-circle"
+                          src="{{(user.picturePath == '') ? 'assets/admin/admintemplates/img/user4-128x128.jpg' : user.picturePath}}" alt="profile picture">
+                      </a>
+                  </div>
+
+                  <h3 class="profile-username text-center">{{user.lastName}} {{user.firstName}}</h3>
+
+                  <p class="text-muted text-center">{{user.role}}</p>
+
+                  <ul class="list-group list-group-unbordered mb-3">
+                      <li class="list-group-item">
+                          <b>Phone</b> <a class="float-right">{{user.phoneNumber}}</a>
+                      </li>
+                      <li class="list-group-item">
+                          <b>Gender</b> <a class="float-right">{{user.gender}}</a>
+                      </li>
+                      <li class="list-group-item">
+                          <b>Tenant</b> <a class="float-right">{{ user.hospital?.code }}</a>
+                      </li>
+                  </ul>
+                  <a [routerLink]='["/feed/profile", user.userId]' class="btn btn-warning btn-block"><b>Back</b></a>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="card">
+              <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                      <li class="nav-item"><font color="red">{{user.userName | titlecase}}'s</font>  Profile</li>
+                  </ul>
+              </div>
+              <div class="card-body">
+                  <form class="form-horizontal" #editForm="ngForm" id="editForm" (ngSubmit)="updateUser()" autocomplete="off">
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">First Name</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="firstName" [(ngModel)]="user.firstName">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Middle Name</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="middleName" [(ngModel)]="user.middleName">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Last Name</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="lastName" [(ngModel)]="user.lastName">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Email</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="email" [(ngModel)]="user.email" readonly style="background-color: #fff">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Phone Number</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="phoneNumber" [(ngModel)]="user.phoneNumber">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">House Number</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="houseNumber" [(ngModel)]="user.houseNumber">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Street Address</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="streetAddress" [(ngModel)]="user.streetAddress">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Nearest Bus Stop</label>
+                          <div class="col-sm-9">
+                              <input type="email" class="form-control" name="nearestBusStop" [(ngModel)]="user.nearestBusStop">
+                              <input type="hidden" class="form-control" name="userName" [(ngModel)]="user.userName">
+                              <input type="hidden" class="form-control" name="id" [(ngModel)]="user.userId">
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">Gender</label>
+                          <div class="col-sm-9">
+                              <select class="form-control" name="gender" [(ngModel)]="user.gender">
+                                  <option *ngFor="let item of genders" [ngValue]="item">{{ item }}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                          <label for="inputName" class="col-sm-3 col-form-label">City</label>
+                          <div class="col-sm-9">
+                              <select name="cityId" class="form-control" [(ngModel)]="SelectedCityId">
+                                  <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <button type="submit" [disabled]="!editForm.dirty" class="btn btn-success">Update Profile</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3">
+
+      </div>
+  </div>
+</div>

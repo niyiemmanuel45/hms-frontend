@@ -1,0 +1,127 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-3">
+          <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                  <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle" src="{{(staff.picturePath == '' || staff.picturePath == 'N/A') ? '/assets/admin/admintemplates/img/user4-128x128.jpg' : staff.picturePath}}" alt="profile picture"/>
+                  </div>
+
+                  <h3 class="profile-username text-center">{{staff.lastName}} {{staff.firstName}}</h3>
+
+                  <p class="text-muted text-center">{{staff.role}}</p>
+
+                  <ul class="list-group list-group-unbordered mb-3">
+                      <li class="list-group-item">
+                        <b>Phone</b> <a class="float-right">{{staff.phoneNumber}}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <b>Gender</b> <a class="float-right">{{staff.gender}}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <b>Hospital</b> <a class="float-right">{{ staff.hospital.name }}</a>
+                      </li>
+                      <li *ngIf="staff.age > 0" class="list-group-item">
+                        <b>Age</b> <a class="float-right">{{ staff.age }} years</a>
+                      </li>
+                      <li *ngIf="staff.dob" class="list-group-item">
+                        <b>DOB</b> <a class="float-right">{{ staff.dob | date: 'dd MMM yyyy' }}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a [routerLink]='["/feed/staffs", staff.hospital.id]' class="btn btn-danger">BACK</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="card">
+              <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                      <li class="nav-item"><font color="red">{{staff.userName | titlecase}}'s</font>  Profile</li>
+                  </ul>
+              </div>
+              <div class="card-body">
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Employee ID</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.employeeId}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputName" class="col-sm-3 col-form-label">First Name</label>
+                    <div class="col-sm-9">
+                        <input type="email" class="form-control" value="{{staff.firstName}}" readonly style="background-color: #fff">
+                    </div>
+                </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Last Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.lastName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Email</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.email}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">User Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.userName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Address</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.houseNumber == null ? 'N/A' : staff.houseNumber +', '+ staff.streetAddress + ', '+ staff.nearestBusStop}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Department</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.department == null ? 'N/A' : staff.department.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">City</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.city == null ? 'N/A' : staff.city.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">State</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{staff.state == null ? 'N/A' : staff.state.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Country</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{ staff.country == null ? 'N/A' : staff.country.name }}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-default">
+          <div class="card-header">
+              <h3 class="card-title">Todo List</h3>
+          </div>
+          <div class="card-body">
+            <ng-container *ngIf="(staff.role == 'doctor') else elseNo">
+              <div class="form-group">
+                <a [routerLink]='["/feed/doctors/appointment", staff.id]' type="button" class="btn btn-success btn-block" style="text-decoration: none;">My Appointments</a>
+              </div>
+            </ng-container>
+            <ng-template #elseNo>
+              <div class="form-group">
+                <a [routerLink]='["/feed/nurses/appointment", staff.id]' type="button" class="btn btn-success btn-block" style="text-decoration: none;">All Appointments</a>
+              </div>
+            </ng-template>
+          </div>
+      </div>
+  </div>
+</div>

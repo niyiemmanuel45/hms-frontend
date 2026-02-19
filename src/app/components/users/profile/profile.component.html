@@ -1,0 +1,133 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-3">
+          <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                  <div class="text-center">
+                      <a [routerLink]='["/feed/change-avatar", user.userId]' title="Change Avatar"><img class="profile-user-img img-fluid img-circle"
+                          src="{{(user.picturePath == '') ? 'assets/admin/admintemplates/img/user4-128x128.jpg' : user.picturePath}}" alt="profile picture">
+                      </a>
+                  </div>
+
+                  <h3 class="profile-username text-center">{{user.lastName}} {{user.firstName}}</h3>
+
+                  <p class="text-muted text-center">{{user.role}}</p>
+
+                  <ul class="list-group list-group-unbordered mb-3">
+                      <li class="list-group-item">
+                          <b>Phone</b> <a class="float-right">{{user.phoneNumber}}</a>
+                      </li>
+                      <li class="list-group-item">
+                          <b>Gender</b> <a class="float-right">{{user.gender}}</a>
+                      </li>
+                      <li class="list-group-item">
+                          <b>Tenant</b> <a class="float-right">{{ user.hospital?.code }}</a>
+                      </li>
+                  </ul>
+                  <a [routerLink]='["/feed/edit-profile", user.userId]' class="btn btn-primary btn-block"><b>Edit Profile</b></a>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="card">
+              <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                      <li class="nav-item"><font color="red">{{user.userName | titlecase}}'s</font>  Profile</li>
+                  </ul>
+              </div>
+              <div class="card-body">
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">First Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.firstName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Middle Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.middleName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Last Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.lastName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Email</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.email}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">User Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.userName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Address</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.houseNumber == null ? 'N/A' : user.houseNumber +', '+ user.streetAddress + ', '+ user.nearestBusStop}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">City</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.city == null ? 'N/A' : user.city.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">State</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.region == null ? 'N/A' : user.region.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Country</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{ user.country == null ? 'N/A' : user.country.name }}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3">
+          <div class="card card-primary">
+              <div class="card-header">
+                  <h3 class="card-title">Change Password</h3>
+              </div>
+              <div class="card-body">
+                  <form class="form-horizontal" method="post" [formGroup]="insertForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Current Password</label>
+                          <input type="password" formControlName="currentPassword" class="form-control" id="exampleInputEmail1">
+                          <div *ngIf="currentPassword.touched && currentPassword.errors" class="errorMessage">
+                              <span *ngIf="currentPassword.hasError('required')">Current Password is required.</span>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">New Password</label>
+                          <input type="password" formControlName="newPassword" class="form-control" id="exampleInputEmail2">
+                          <div *ngIf="newPassword.touched && newPassword.errors" class="errorMessage">
+                              <span *ngIf="newPassword.hasError('required')">Password is required.</span>
+                              <span *ngIf="newPassword.hasError('maxlength')">Only 8 characters allowed for password.</span>
+                              <span *ngIf="newPassword.hasError('minlength')">Atleast 4 characters needed for password.</span>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Repeat Password</label>
+                          <input type="password" formControlName="confirmNewPassword" class="form-control" id="exampleInputEmail3">
+                          <div *ngIf="confirmNewPassword.touched && confirmNewPassword.errors" class="errorMessage">
+                              <span *ngIf="confirmNewPassword.hasError('required')">Confirm Password is required.</span>
+                              <span *ngIf="confirmNewPassword.hasError('mustMatch')">Password Must Match.</span>
+                          </div>
+                      </div>
+                      <button type="submit" [disabled]="insertForm.invalid" class="btn btn-success">Change</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

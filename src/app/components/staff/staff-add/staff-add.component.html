@@ -1,0 +1,197 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <h4 class="panel-title">STAFF ENTRY FORM</h4>
+              </div>
+              <div class="panel-body">
+                  <form method="post" [formGroup]="insertForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">First Name</label>
+                                <input type="text" class="form-control" formControlName="firstName">
+                                <div *ngIf="firstName.touched && firstName.errors" class="errorMessage">
+                                    <span *ngIf="firstName.hasError('required')">First name is required.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Last Name</label>
+                                <input type="text" class="form-control" formControlName="lastName">
+                                <div *ngIf="lastName.touched && lastName.errors" class="errorMessage">
+                                    <span *ngIf="lastName.hasError('required')">Last name is required.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="email" class="form-control" formControlName="email">
+                                <div *ngIf="email.touched && email.errors" class="errorMessage">
+                                    <span *ngIf="email.hasError('required')">Email is required.</span>
+                                    <span *ngIf="email.hasError('email') || email.hasError('pattern')">Enter a valid email.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Employee ID</label>
+                              <input type="text" class="form-control" formControlName="employeeId">
+                              <div *ngIf="employeeId.touched && employeeId.errors" class="errorMessage">
+                                  <span *ngIf="employeeId.hasError('required')">Employee id is required.</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">UserName</label>
+                          <input type="text" class="form-control" formControlName="userName">
+                          <div *ngIf="userName.touched && userName.errors" class="errorMessage">
+                              <span *ngIf="userName.hasError('required')">Username is required.</span>
+                          </div>
+                      </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Staff Logo</label>
+                          <input type="file" class="form-control" formControlName="Picture" (change)="onFileChange($event)">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Contact Phone Number</label>
+                              <input type="text" class="form-control" formControlName="phoneNumber">
+                              <div *ngIf="phoneNumber.touched && phoneNumber.errors" class="errorMessage">
+                                  <span *ngIf="phoneNumber.hasError('required')">Contact phone number is required.</span>
+                                  <span *ngIf="phoneNumber.hasError('pattern')">Please, Enter 11 digit Mobile Number.</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Staff Type</label>
+                              <select class="form-control" formControlName="staffType">
+                                  <option value="0">Select staff type</option>
+                                  <option value="1">DOCTOR</option>
+                                  <option value="2">NURSE</option>
+                                  <option value="3">AUDITOR</option>
+                                  <option value="4">FINANCE OFFICER</option>
+                                  <option value="5">RECEPTIONIST</option>
+                              </select>
+                              <div *ngIf="staffType.touched && staffType.errors" class="errorMessage">
+                                  <span *ngIf="staffType.hasError('required')">Staff type is required.</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Gender</label>
+                              <select class="form-control" formControlName="gender">
+                                  <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                              </select>
+                              <div *ngIf="gender.touched && gender.errors" class="errorMessage">
+                                  <span *ngIf="gender.hasError('required')">Gender is required.</span>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">DOB</label>
+                                <input type="date" class="form-control" formControlName="dob">
+                                <div *ngIf="dob.touched && dob.errors" class="errorMessage">
+                                    <span *ngIf="dob.hasError('required')">Date of birth is required.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">House Number</label>
+                              <input type="text" class="form-control" formControlName="houseNumber">
+                              <div *ngIf="houseNumber.touched && houseNumber.errors" class="errorMessage">
+                                  <span *ngIf="houseNumber.hasError('required')">House number is required.</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Street Address</label>
+                              <input type="text" class="form-control" formControlName="streetAddress">
+                              <div *ngIf="streetAddress.touched && streetAddress.errors" class="errorMessage">
+                                  <span *ngIf="streetAddress.hasError('required')">Street address is required.</span>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Nearest Bus Stop</label>
+                                <input type="text" class="form-control" formControlName="nearestBusStop">
+                                <div *ngIf="nearestBusStop.touched && nearestBusStop.errors" class="errorMessage">
+                                    <span *ngIf="dob.hasError('required')">Nearest bus stop is required.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Department</label>
+                                <select formControlName="departmentId" class="form-control boxs-style">
+                                  <option *ngFor="let dept of departments" [value]="dept.id">{{dept.name}}</option>
+                                </select>
+                                <div *ngIf="departmentId.touched && departmentId.errors" class="errorMessage">
+                                    <span *ngIf="departmentId.hasError('required')">Select a Department.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">State</label>
+                                <select formControlName="stateId" class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                                  <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                                </select>
+                                <div *ngIf="stateId.touched && stateId.errors" class="errorMessage">
+                                    <span *ngIf="stateId.hasError('required')">Select a state.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">City</label>
+                                <select formControlName="cityId" class="form-control boxs-style">
+                                  <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                                </select>
+                                <div *ngIf="cityId.touched && cityId.errors" class="errorMessage">
+                                    <span *ngIf="cityId.hasError('required')">Select a city.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" *ngIf="imageSrc">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Preview</label>
+                              <div class="image-crop">
+                                <img [src]="imageSrc" style="width: 20%; height: 20%;" alt="">
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <a [routerLink]='["/feed/staffs", hospital.id]' type="submit" class="btn btn-warning"><i class="fa fa-reply"></i> Back</a> |
+                        <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Save Data</button>
+                    </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

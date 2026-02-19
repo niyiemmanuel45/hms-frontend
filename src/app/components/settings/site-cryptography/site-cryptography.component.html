@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-6">
+          <div class="panel panel-white" id="js-alerts">
+              <div class="panel-heading clearfix">
+                  <h3 class="panel-title">Encrypt Data</h3>
+              </div>
+              <div class="panel-body">
+                  <form class="form-inline" [formGroup]="encryptForm" (ngSubmit)="onSubmit()">
+                      <div class="form-group">
+                          <label class="sr-only" for="exampleInputEmail2">String</label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Enter any string" formControlName="encrypt">
+                      </div>
+                      <button type="submit" class="btn btn-info">Encrypt</button>
+                  </form>
+                  <br/>
+                  <div class="alert alert-warning alert-dismissible" *ngIf="!isLoading">
+                      <h5>What you encrypt is given below;</h5>
+                      <p>{{ message }}</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="panel panel-white" id="js-alerts">
+              <div class="panel-heading clearfix">
+                  <h3 class="panel-title">Decrypt Data</h3>
+              </div>
+              <div class="panel-body">
+                  <form class="form-inline" [formGroup]="decryptForm" (ngSubmit)="onDecrypt()">
+                      <div class="form-group">
+                          <label class="sr-only" for="exampleInputEmail2">String</label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Enter any string" formControlName="decrypt">
+                      </div>
+                      <button type="submit" class="btn btn-info">Decrypt</button>
+                  </form>
+                  <br/>
+                  <div class="alert alert-danger alert-dismissible" *ngIf="!isdecptLoad">
+                      <h5>What you decrypt is given below;</h5>
+                      {{ message_decrpty }}
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

@@ -1,0 +1,343 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="float-left">
+                      <a [routerLink]='["/feed/hospital/config", organization.id]' type="button" class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <h4 class="panel-title">All Patients</h4>
+                  </div>
+                  <div class="col-lg-4">
+                    <button type="submit" data-toggle="modal" data-target="#addModal" class="btn btn-success" style="float: right;" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')"><i class="fa fa-plus"> </i> Add New Patient</button>
+                  </div>
+                </div>
+                <br/>
+              </div>
+              <div class="panel-body">
+                  <div class="row" *ngIf="(users.length > 0)">
+                      <div class="col-lg-8">
+                        <div class="form-group">
+                          <label for="inputEmail3">Show</label>
+                          <select class="form-control" (change)="onPageSizeChange($event, orgId)" id="styled-select" >
+                              <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                            <div class="input-group">
+                                <input type="text" (keyup)="Filter($event, orgId)" class="form-control input-search" placeholder="Search by name...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card card-solid">
+                    <div class="card-body pb-0">
+                      <div class="row">  
+                        <ng-container *ngIf="(users.length > 0); else elseBlock">                    
+                          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column" *ngFor="let item of users | paginate : {
+                                    itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                    totalItems: pagination.count
+                                }; let i = index">
+                            <div class="card bg-light d-flex flex-fill">
+                              <div class="card-header text-muted border-bottom-0">
+                                Card Number: <span class="btn btn-sm bg-teal"> {{item.cardNumber}}</span> 
+                              </div>
+                              <div class="card-body pt-0">
+                                <div class="row">
+                                  <div class="col-7">
+                                    <h2 class="lead"><b>{{item.lastName}} {{item.firstName}}</b></h2>
+                                    <p class="text-muted text-sm"><b>Email: </b> {{item.email}} </p>
+                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: {{item.houseNumber}}, {{item.streetAddress}}, {{item.nearestBusStop}}, {{item.city.name}}, {{item.region.name}}.</li>
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{item.phoneNumber}}</li>
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-user"></i></span> Username: {{item.userName}}</li>
+                                    </ul>
+                                  </div>
+                                  <div class="col-5 text-center">
+                                    <a [routerLink]='["/feed/patient-avatar", item.userId]'>
+                                      <img src="{{ (item.picturePath == '' || item.picturePath == 'N/A') ? '/assets/admin/admintemplates/img/user1-128x128.jpg' : item.picturePath }}" style="width: 128px; height:128px;" alt="user-avatar" class="img-circle img-fluid">
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-footer">
+                                <div class="text-right">
+                                  <a [routerLink]='["/feed/patient/show/", item.userId]' class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i> View Profile
+                                  </a> | 
+                                  <button type="submit" data-toggle="modal" data-target="#editModal" (click)="UpdateItem(item)" class="btn btn-sm bg-teal" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')"><i class="fa fa-edit"></i></button> | 
+                                  <button type="button" (click)="deleteUser(item, orgId)" class="btn btn-sm btn-danger" *ngIf="userRoleStatus == 'power_user'"><i class="fa fa-trash"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        <div class="col-md-12">
+                          <h2 style="font-size:14px; font-family:Trebuchet MS; text-align: center; color: red;">No Record Found</h2>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div style="float:right" *ngIf="(users.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event, orgId)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+<!-- Add Modal-->
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">PATIENT ENTRY FORM</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="insertForm" (ngSubmit)="AddPatient()" autocomplete="off">
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">First name</label>
+                        <input type="text" class="form-control boxs-style" formControlName="firstName" />
+                        <div *ngIf="firstName.touched && firstName.errors" class="errorMessage">
+                            <span *ngIf="firstName.hasError('required')">First name is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Phone Number</label>
+                        <input type="text" class="form-control boxs-style" formControlName="phoneNumber" />
+                        <div *ngIf="phoneNumber.touched && phoneNumber.errors" class="errorMessage">
+                            <span *ngIf="phoneNumber.hasError('required')">Phone number is required.</span>
+                            <span *ngIf="phoneNumber.hasError('pattern')">Please, Enter 11 digit Mobile Number.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">DOB</label>
+                        <input type="date" class="form-control boxs-style" formControlName="dob" />
+                        <div *ngIf="dob.touched && dob.errors" class="errorMessage">
+                            <span *ngIf="dob.hasError('required')">Date of birth is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">House Number</label>
+                        <input type="text" class="form-control boxs-style" formControlName="houseNumber" />
+                        <div *ngIf="houseNumber.touched && houseNumber.errors" class="errorMessage">
+                            <span *ngIf="houseNumber.hasError('required')">House number is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">State</label>
+                        <select formControlName="regionId" class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                          <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                        </select>
+                        <div *ngIf="regionId.touched && regionId.errors" class="errorMessage">
+                            <span *ngIf="regionId.hasError('required')">State is required.</span>
+                        </div>
+                    </div>
+
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Middle Name</label>
+                        <input type="text" class="form-control boxs-style" formControlName="middleName" />
+                        <div *ngIf="middleName.touched && middleName.errors" class="errorMessage">
+                            <span *ngIf="middleName.hasError('required')">Middle name is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">UserName</label>
+                        <input type="text" class="form-control boxs-style" formControlName="username" />
+                        <div *ngIf="username.touched && username.errors" class="errorMessage">
+                            <span *ngIf="username.hasError('required')">Username is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Gender</label>
+                        <select class="form-control" formControlName="gender">
+                            <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                        </select>
+                        <div *ngIf="gender.touched && gender.errors" class="errorMessage">
+                            <span *ngIf="gender.hasError('required')">Gender is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Street Address</label>
+                        <input type="text" class="form-control boxs-style" formControlName="streetAddress" />
+                        <div *ngIf="streetAddress.touched && streetAddress.errors" class="errorMessage">
+                            <span *ngIf="streetAddress.hasError('required')">Address is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">City</label>
+                        <select formControlName="cityId" class="form-control boxs-style">
+                          <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                        </select>
+                        <div *ngIf="cityId.touched && cityId.errors" class="errorMessage">
+                            <span *ngIf="cityId.hasError('required')">City is required.</span>
+                        </div>
+                    </div>
+
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Last Name</label>
+                        <input type="text" class="form-control boxs-style" formControlName="lastName" />
+                        <div *ngIf="lastName.touched && lastName.errors" class="errorMessage">
+                            <span *ngIf="lastName.hasError('required')">Last name is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email</label>
+                        <input type="text" class="form-control boxs-style" formControlName="email" />
+                        <div *ngIf="email.touched && email.errors" class="errorMessage">
+                            <span *ngIf="email.hasError('required')">Email is required.</span>
+                            <span *ngIf="email.hasError('email') || email.hasError('pattern')">Enter a valid email.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Occupation</label>
+                        <input type="text" class="form-control boxs-style" formControlName="occupation" />
+                        <div *ngIf="occupation.touched && occupation.errors" class="errorMessage">
+                            <span *ngIf="occupation.hasError('required')">Occupation is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Nearest Bus Stop</label>
+                        <input type="text" class="form-control boxs-style" formControlName="nearestBustop" />
+                        <div *ngIf="nearestBustop.touched && nearestBustop.errors" class="errorMessage">
+                            <span *ngIf="nearestBustop.hasError('required')">Nearest bus stop is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Blood Group</label>
+                        <select formControlName="bloodGroupId" class="form-control boxs-style">
+                          <option *ngFor="let blood of bloodGroups" [value]="blood.id">{{blood.bloodGroup}}</option>
+                        </select>
+                        <div *ngIf="bloodGroupId.touched && bloodGroupId.errors" class="errorMessage">
+                            <span *ngIf="bloodGroupId.hasError('required')">Blood group is required.</span>
+                        </div>
+                    </div>
+
+                  </div>
+                </div>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" id="ModalClose" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                 <button type="submit" class="btn btn-success">Add</button>
+             </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Update Patient Profile</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="patientDetail" (ngSubmit)="updatePatient()" autocomplete="off">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">First name</label>
+                      <input type="text" class="form-control boxs-style" formControlName="firstName" />
+                      <input type="hidden" class="form-control" id="exampleInputEmail1" formControlName="id" readonly>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Phone Number</label>
+                      <input type="text" class="form-control boxs-style" formControlName="phoneNumber" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">DOB</label>
+                      <input type="date" class="form-control boxs-style" formControlName="dob" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">House Number</label>
+                      <input type="text" class="form-control boxs-style" formControlName="houseNumber" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">State</label>
+                      <select formControlName="regionId" class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                        <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Middle Name</label>
+                      <input type="text" class="form-control boxs-style" formControlName="middleName" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">UserName</label>
+                      <input type="text" class="form-control boxs-style" formControlName="username" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Gender</label>
+                      <select class="form-control" formControlName="gender">
+                          <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Street Address</label>
+                      <input type="text" class="form-control boxs-style" formControlName="streetAddress" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">City</label>
+                      <select formControlName="cityId" class="form-control boxs-style">
+                        <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Last Name</label>
+                      <input type="text" class="form-control boxs-style" formControlName="lastName" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Email</label>
+                      <input type="text" class="form-control boxs-style" formControlName="email" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Occupation</label>
+                      <input type="text" class="form-control boxs-style" formControlName="occupation" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Nearest Bus Stop</label>
+                      <input type="text" class="form-control boxs-style" formControlName="nearestBusStop" />
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Blood Group</label>
+                      <select formControlName="bloodGroupId" class="form-control boxs-style">
+                        <option *ngFor="let blood of bloodGroups" [value]="blood.id">{{blood.bloodGroup}}</option>
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Back</button>
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>

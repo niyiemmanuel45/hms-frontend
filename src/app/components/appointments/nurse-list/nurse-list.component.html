@@ -1,0 +1,258 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+            <div class="panel-heading clearfix">
+              <!-- <a [routerLink]='["/feed/staffs/show", userId]' class="btn btn-default"><i class="fa fa-reply"> </i> Back</a> -->
+              <button type="submit" data-toggle="modal" data-target="#addModal" class="btn btn-success" style="float:right"><i class="fa fa-plus"> </i> Book an appointment</button>
+            </div><br/>
+              <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label for="inputEmail3">Show</label>
+                            <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+                                <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <button type="submit" data-toggle="modal" data-target="#filterModal" class="btn btn-sm bg-teal" style="float:right"><i class="fa fa-filter"> </i> Filter</button>                        
+                    </div>
+                  </div>                  
+                  <div class="container-fluid">
+                    <div class="row">
+                      <ng-container *ngIf="(cases.length > 0); else elseBlock">
+                        <div class="col-md-4" *ngFor="let item of cases | paginate : {
+                                itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                totalItems: pagination.count
+                            }; let i = index">
+                          <div class="card card-primary card-outline direct-chat direct-chat-primary shadow-none">
+                            <div class="card-header">
+                              <h3 class="card-title">CARD NO: {{item.patient.cardNumber}}</h3>
+                              <div class="card-tools">
+                                <button type="button" data-toggle="modal" data-target="#editModal" (click)="show(item)" class="btn btn-tool" title="Edit" data-widget="chat-pane-toggle">
+                                  <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" (click)="DeleteCase(item)" data-card-widget="remove">
+                                  <i class="fas fa-trash"></i>
+                                </button>
+                              </div>
+                            </div>                        
+                            <div class="card-body">
+                              <div class="direct-chat-messages">
+                                <div class="direct-chat-msg">
+                                  <div class="direct-chat-infos clearfix">
+                                    <span class="direct-chat-name float-left">{{item.patient.name}}</span>
+                                    <span class="direct-chat-timestamp float-right">{{item.dateCreated | date: 'dd MMM yyyy'}}</span>
+                                  </div>
+                                  <img class="direct-chat-img" src="{{ (item.patient.logoUrl == '' || item.patient.logoUrl == 'N/A') ? '/assets/admin/admintemplates/img/user1-128x128.jpg' : item.patient.logoUrl }}" alt="Message User Image">
+                                  <div class="direct-chat-text">
+                                    {{item.remark}}
+                                  </div>
+                                </div>
+                                <div class="direct-chat-msg right">
+                                  <div class="direct-chat-infos clearfix">
+                                    <span class="direct-chat-name float-right">Dr. {{item.doctor.name}}</span>
+                                    <span class="direct-chat-timestamp float-left"><span style="color: red;">Appointment date: </span>{{item.date | date: 'dd MMM yyyy'}}</span>
+                                  </div>
+                                  <img class="direct-chat-img" src="{{ (item.doctor.logoUrl == '' || item.doctor.logoUrl == 'N/A') ? '/assets/admin/admintemplates/img/user3-128x128.jpg' : item.doctor.logoUrl }}" alt="Message User Image">
+                                  <div class="direct-chat-text">
+                                    {{item.status == 'PENDING' ? 'Waiting for doctor\'s approval' : item.status}}
+                                  </div>
+                                </div>
+                                
+                                <div class="card-header">
+                                  <div class="card-tools">
+                                    <button type="button" title="APPROVE" (click)="Approve(item.id)" class="btn btn-tool" data-widget="chat-pane-toggle">
+                                      <i class="fas fa-check" style="color: green;"></i>
+                                    </button>
+                                    <button type="button" title="REJECT" class="btn btn-tool" (click)="Reject(item.id)" data-card-widget="remove">
+                                      <i class="fas fa-times" style="color: red;"></i>
+                                    </button>
+                                  </div>
+                                </div> 
+                              </div>                             
+                            </div>
+                          </div>
+                        </div>                      
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        <div class="col-md-12">
+                          <h2 style="font-size:14px; font-family:Trebuchet MS; text-align: center; color: red;">No Record Found</h2>
+                        </div>
+                      </ng-template>                    
+                  </div>                  
+                  <div style="float:right" *ngIf="(cases.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+
+<!-- Add Modal-->
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Book An Appointment</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="insertForm" (ngSubmit)="AddBed()" autocomplete="off">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Patient</label>
+                    <select formControlName="patientId" class="form-control boxs-style">
+                      <option *ngFor="let pat of patients" [value]="pat.userId">{{pat.lastName}} {{pat.firstName}}</option>
+                    </select>
+                    <div *ngIf="patientId.touched && patientId.errors" class="errorMessage">
+                      <span *ngIf="patientId.hasError('required')">Select a patient.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Doctor</label>
+                    <select formControlName="doctorId" class="form-control boxs-style">
+                      <option *ngFor="let doc of doctors" [value]="doc.id">{{doc.lastName}} {{doc.firstName}}</option>
+                    </select>
+                    <div *ngIf="doctorId.touched && doctorId.errors" class="errorMessage">
+                      <span *ngIf="doctorId.hasError('required')">Pick a doctor.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Date</label>
+                    <input type="date" class="form-control boxs-style" formControlName="date" />
+                    <div *ngIf="date.touched && date.errors" class="errorMessage">
+                      <span *ngIf="date.hasError('required')">Date is required.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>             
+              <div class="form-group">
+                <label for="exampleInputEmail1">Remark </label>
+                <textarea  rows="4" cols="50" class="form-control boxs-style" formControlName="remark"></textarea>
+                <div *ngIf="remark.touched && remark.errors" class="errorMessage">
+                  <span *ngIf="remark.hasError('required')">Remark is required.</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="ModalClose" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Book</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Appointment</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="empDetail" (ngSubmit)="UpdateCase()" autocomplete="off">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Patient</label>
+                <select formControlName="patientId" class="form-control boxs-style">
+                  <option *ngFor="let pat of patients" [value]="pat.userId">{{pat.lastName}} {{pat.firstName}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Doctor</label>
+                <select formControlName="doctorId" class="form-control boxs-style">
+                  <option *ngFor="let doc of doctors" [value]="doc.id">{{doc.lastName}} {{doc.firstName}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Date</label>
+                <input type="date" class="form-control boxs-style" formControlName="date" />
+              </div>
+            </div>
+          </div> 
+          <div class="form-group">
+            <label for="exampleInputEmail1">Remark </label>
+            <textarea  rows="4" cols="50" class="form-control boxs-style" formControlName="remark"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter More Modal-->
+<div class="modal fade" id="filterModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Filtering</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="Filter()" autocomplete="off">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Doctor Name </label>
+                <input type="text" class="form-control boxs-style" id="Doctor" [(ngModel)]="filters.Doctor" name="Doctor" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Card Number</label>
+                <input type="text" class="form-control boxs-style" id="CardNumber" [(ngModel)]="filters.CardNumber" name="CardNumber" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Status</label>
+                <input type="text" class="form-control boxs-style" id="Status" [(ngModel)]="filters.Status" name="Status" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Start Date</label>
+                  <input type="date" class="form-control boxs-style" id="startDate" [(ngModel)]="filters.startDate" name="startDate" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">End Date</label>
+                  <input type="date" class="form-control boxs-style" id="endDate" [(ngModel)]="filters.endDate" name="endDate" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

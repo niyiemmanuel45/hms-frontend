@@ -1,0 +1,13 @@
+<div class="lockscreen-wrapper">
+  <div class="lockscreen-logo">
+      <i class="fas fa-exclamation-triangle text-danger"></i>Internal Server error.
+  </div>
+
+  <div class="help-block text-center">
+      <h3 style="color:red" *ngIf="error">Error: {{error.message}}</h3>
+      <p *ngIf="error">{{error.details}} </p>
+  </div>
+  <div class="text-center">
+      An error occurred while processing data. Return <a [routerLink]='["/feed"]'>Home</a>
+  </div>
+</div>

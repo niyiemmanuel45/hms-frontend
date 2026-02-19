@@ -1,0 +1,126 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <h4 class="panel-title">Profile User</h4>
+              </div>
+              <div class="panel-body">
+                  <form method="post" [formGroup]="insertForm" (ngSubmit)="AddUser()" autocomplete="off">
+                      <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">FirstName</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="firstName" />
+                                  <div *ngIf="firstName.touched && firstName.errors" class="errorMessage">
+                                      <span *ngIf="firstName.hasError('required')">first name is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">Email</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="email">
+                                  <div *ngIf="email.touched && email.errors" class="errorMessage">
+                                      <span *ngIf="email.hasError('required')">Email is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">PhoneNumber</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="phoneNumber">
+                                  <div *ngIf="phoneNumber.touched && phoneNumber.errors" class="errorMessage">
+                                      <span *ngIf="phoneNumber.hasError('required')">Phone number is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">House Number</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="houseNumber">
+                                  <div *ngIf="houseNumber.touched && houseNumber.errors" class="errorMessage">
+                                      <span *ngIf="houseNumber.hasError('required')">House number is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">Nearest Bustop</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="nearestBustop">
+                                  <div *ngIf="nearestBustop.touched && nearestBustop.errors" class="errorMessage">
+                                      <span *ngIf="nearestBustop.hasError('required')">Nearest bustop is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">City</label>
+                                  <select class="form-control" formControlName="cityId">
+                                      <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                                  </select>
+                                  <div *ngIf="cityId.touched && cityId.errors" class="errorMessage">
+                                      <span *ngIf="cityId.hasError('required')">City is required.</span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">LastName</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="lastName">
+                                  <div *ngIf="lastName.touched && lastName.errors" class="errorMessage">
+                                      <span *ngIf="lastName.hasError('required')">Last name is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">MiddleName</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="middleName">
+                                  <div *ngIf="middleName.touched && middleName.errors" class="errorMessage">
+                                      <span *ngIf="middleName.hasError('required')">Middle name is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">UserName</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="username">
+                                  <div *ngIf="username.touched && username.errors" class="errorMessage">
+                                      <span *ngIf="username.hasError('required')">Username is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">Gender</label>
+                                  <select class="form-control" formControlName="gender">
+                                      <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                                  </select>
+                                  <div *ngIf="gender.touched && gender.errors" class="errorMessage">
+                                      <span *ngIf="gender.hasError('required')">Gender is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">Street Address</label>
+                                  <input type="text" class="form-control boxs-style" id="exampleInputEmail1" formControlName="streetAddress">
+                                  <div *ngIf="streetAddress.touched && streetAddress.errors" class="errorMessage">
+                                      <span *ngIf="streetAddress.hasError('required')">Street address is required.</span>
+                                  </div>
+                              </div>
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1">Right?</label>
+                                  <ng-container *ngIf="(userRoleStatus =='power_user' || userRoleStatus == 'client_admin'); else elseBlock">
+                                      <select class="form-control" formControlName="roles">
+                                          <option *ngFor="let item of role" [value]="item.name">{{item.assignName}}</option>
+                                      </select>
+                                      <div *ngIf="roles.touched && roles.errors" class="errorMessage">
+                                          <span *ngIf="roles.hasError('required')">Role is required.</span>
+                                      </div>
+                                  </ng-container>
+                                  <ng-template #elseBlock>
+                                      <select class="form-control" formControlName="roles">
+                                          <option *ngFor="let item of roleworker" [value]="item.name">{{item.assignName}}</option>
+                                      </select>
+                                      <div *ngIf="roles.touched && roles.errors" class="errorMessage">
+                                          <span *ngIf="roles.hasError('required')">Role is required.</span>
+                                      </div>
+                                  </ng-template>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <a [routerLink]='["/feed/admin-users", orgId]' type="button" class="btn btn-info"> Back</a>
+                          |
+                          <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Save Data</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

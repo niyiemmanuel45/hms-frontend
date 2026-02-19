@@ -1,0 +1,156 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                <a [routerLink]='["/feed/hospital/create"]' class="btn btn-success btn-addon m-b-sm btn-rounded text-uppercase" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin'"><i class="fa fa-plus"> </i> Add New Hospital</a>
+              </div><br/>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                          <div class="form-group">
+                              <label for="inputEmail3">Show</label>
+                              <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+                                  <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                              <div class="input-group">
+                                  <input type="text" (keyup)="Filter($event)" class="form-control input-search" placeholder="Search by name...">
+                                  <span class="input-group-btn">
+                                      <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <th>NAME</th>
+                                  <th>AVATAR </th>
+                                  <th>LICENSE NUMBER</th>
+                                  <th>ACTION</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container *ngIf="(organizations.length > 0); else elseBlock">
+                                  <tr *ngFor="let item of organizations | paginate : {
+                                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                      totalItems: pagination.count
+                                  }; let i = index">
+                                      <th scope="row">{{ (pagination.page - 1) * pagination.pageSize + i + 1 }}</th>
+                                      <td>{{item.name}}</td>
+                                      <td>
+                                        <a [routerLink]='["/feed/hospital/logo", item.id]'><img src="{{(item.logoURL == '' || item.logoURL == 'N/A') ? '/assets/admin/admintemplates/img/default-150x150.png' : item.logoURL}}" alt="" width="60px" height="45px"></a>
+                                      </td>
+                                      <td><label class="btn btn-warning">{{item.licenseNumber}}</label></td>
+                                      <td>
+                                          <button type="submit" data-toggle="modal" data-target="#modal-lg" title="More Details" (click)="showOrg(item)" class="btn btn-info"><i class="fa fa-eye"></i></button> |
+                                          <a [routerLink]='["/feed/hospital/edit", item.id]' title="Edit Hospital" class="btn btn-primary" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin'"><i class="fa fa-edit"></i></a> |
+                                          <a [routerLink]='["/feed/hospital/config", item.id]' type="submit" title="Hospital Configuration" class="btn btn-success"><i class="fa fa-cogs"></i></a> |
+                                          <button type="button" (click)="deleteOrganization(item)" class="btn btn-danger" title="Delete Tenant" *ngIf="userRoleStatus == 'power_user'" ><i class="fa fa-trash"></i></button>
+                                      </td>
+                                  </tr>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                  <tr>
+                                      <td colspan="5" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                                  </tr>
+                              </ng-template>
+                          </tbody>
+                      </table>
+                  </div>
+                  <pagination-controls class="paginate-style"
+                   (pageChange)="onPageChange($event)">
+                  </pagination-controls>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+<!-- View More Modal-->
+<div class="modal fade" id="modal-lg">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Hospital Details</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form [formGroup]="empDetail">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" formControlName="name" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">License Number </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="licenseNumber" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Contact Name </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="contactName" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Country </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="countryId" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">City </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="cityId" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Redirect URL </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="redirectUrl" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Code </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="code" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Contact Email </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="emailAddress" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Contact Phone Number </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="phoneNumber" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">State </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="stateId" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Slogan </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="slogan" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Website URL </label>
+                          <input type="text" class="form-control" id="exampleInputEmail2" formControlName="websiteURL" readonly="readonly" style="background-color:#fff;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Address </label>
+                        <input type="text" class="form-control" id="exampleInputEmail2" formControlName="address" readonly="readonly" style="background-color:#fff;">
+                    </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>

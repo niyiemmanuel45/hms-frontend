@@ -1,0 +1,215 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+          <h4 class="panel-title"></h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Other Navs</h3>
+    
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <ul class="nav nav-pills flex-column">
+                    <li class="nav-item active">
+                      <a [routerLink]='["/feed/cities", organization.id]' class="nav-link">
+                        <i class="fas fa-cog"></i> CITIES
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/patients", organization.id]' class="nav-link">
+                        <i class="fas fa-users"></i> PATIENTS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin')">
+                      <a [routerLink]='["/feed/admin-users", organization.id]' class="nav-link">
+                        <i class="far fa-user"></i> ADMINISTRATORS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin')">
+                      <a [routerLink]='["/feed/staffs", organization.id]' class="nav-link">
+                        <i class="fas fa-user"></i> ALL STAFFS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/doctors", organization.id]' class="nav-link">
+                        <i class="fas fa-users"></i> DOCTORS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/nurses", organization.id]' class="nav-link">
+                        <i class="fas fa-users"></i> NURSES
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/test-type", organization.id]'class="nav-link">
+                        <i class="fas fa-filter"></i> TEST TYPE
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/medicine", organization.id]'class="nav-link">
+                        <i class="far fa-file-alt"></i> MEDICINE
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/donor", organization.id]' class="nav-link">
+                        <i class="far fa-user"></i> DONORS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/bed", organization.id]' class="nav-link">
+                        <i class="fas fa-cogs"></i> BED
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse' || userRoleStatus == 'receptionist' || userRoleStatus == 'tenant')">
+                      <a [routerLink]='["/feed/nurses/appointment", currentUserId]' class="nav-link">
+                        <i class="far fa-file-alt"></i> APPOINTMENTS
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin')">
+                      <a [routerLink]='["/feed/beneficiary", organization.id]' class="nav-link">
+                        <i class="fas fa-database"></i> BENEFICIARIES
+                      </a>
+                    </li>
+                    <li class="nav-item" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin')">
+                      <a [routerLink]='["/feed/invoice-settings", organization.id]' class="nav-link">
+                        <i class="fas fa-cog"></i> INVOICE SETTINGS
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <div class="card">
+                <div class="card-body p-0">
+                  <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                      <a [routerLink]='["/feed/hospital"]'class="nav-link">
+                        <i class="far fa-circle text-danger"></i>
+                        BACK
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="panel-heading clearfix">
+                    <h4 class="panel-title">Hospital Details</h4>
+                  </div>
+                  <div class="card card-primary card-outline">
+                    <div class="card-header">
+                      <a [routerLink]='["/feed/hospital/logo", organization.id]' type="submit" class="btn btn-warning" style="float:right"><i class="fa fa-upload"></i> Upload Logo</a>
+                    </div>
+                      <div class="card-body p-0">
+                        <div class="table-responsive mailbox-messages">
+                          <table class="table table-hover table-striped">
+                            <tbody>
+                                <tr>
+                                  <td>
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Hospital Name</label>
+                                      <input type="text" class="form-control" id="exampleInputEmail1" [(ngModel)]="organization.name" readonly="readonly" style="background-color: #fff;">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Hospital Code</label>
+                                      <input type="text" class="form-control" id="exampleInputEmail1" [(ngModel)]="organization.code" readonly="readonly" style="background-color: #fff;">
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">License Number</label>
+                                      <input type="text" class="form-control" id="exampleInputEmail1" [(ngModel)]="organization.licenseNumber" readonly="readonly" style="background-color: #fff;">
+                                    </div>
+                                  </td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title" style="float:left">General Settings</h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-inline" #editForm="ngForm" (ngSubmit)="AddSettings()" autocomplete="off">
+                            <div class="table-responsive" *ngFor="let obj of dataarray; let i = index">
+                                <table id="dynamic_field" class="display table" style="width:100%;">
+                                    <tr>
+                                        <td><input type="text" name="parameter{{i}}" placeholder="Parameter" class="form-control" [(ngModel)] = "obj.parameter" required/></td>
+                                        <td><input type="text" name="value{{i}}" placeholder="Value" class="form-control" [(ngModel)] = "obj.value" required/></td>
+                                        <td *ngIf="i == 0">
+                                            <button type="button" name="add" id="add" class="btn btn-info" (click)="addForm()"><i class="fa fa-plus"></i></button>
+                                        </td>
+                                        <td *ngIf="i != 0">
+                                            <button type="button" name="remove"  (click)="removeForm(i)"class="btn btn-danger">X</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <input type="hidden" name="orgCode" [(ngModel)]="organization.code"/>
+                            <input type="hidden" name="id" [(ngModel)]="organization.id"/>
+                            <button type="submit" class="btn btn-success">Add Settings</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title">Configuration Settings for (<font color="red">{{organization.name}}</font>)</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                    <th *ngIf="userRoleStatus == 'power_user'">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="(configurations?.length); else elseBlock">
+                                    <tr *ngFor="let item of configurations; let i = index">
+                                        <th scope="row">{{ i + 1 }}</th>
+                                        <td>{{item.parameter}}</td>
+                                        <td>{{item.value}}</td>
+                                        <td>
+                                            <button type="button" (click)="deleteConfig(item, organization.id)" *ngIf="userRoleStatus == 'power_user'" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                    <tr>
+                                        <td colspan="4" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Yet</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+              </div>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/>
+</div>

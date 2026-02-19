@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <h4 class="panel-title">HOSPITAL ENTRY FORM</h4>
+              </div>
+              <div class="panel-body">
+                <form method="post" [formGroup]="prescriptionForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">Doctor</label>
+                          <input type="hidden" class="form-control boxs-style" formControlName="patientId" readonly/>
+                          <select formControlName="doctorId" class="form-control boxs-style">
+                            <option *ngFor="let doc of doctors" [value]="doc.id">{{doc.lastName}} {{doc.firstName}}</option>
+                          </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1">History</label>
+                          <textarea rows="4" cols="50" class="form-control boxs-style" formControlName="history"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div formArrayName="dosage" *ngFor="let dose of dosage.controls; let i = index">
+                      <div [formGroupName]="i">
+                        <div class="row">
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Medicine</label>
+                              <select formControlName="medicineId" class="form-control boxs-style">
+                                <option *ngFor="let med of medicines" [ngValue]="med.id">{{med.name}}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Days</label>
+                              <input type="text" class="form-control boxs-style" formControlName="days" placeholder="5"/>
+                            </div>
+                          </div>
+                          <div class="col-md-2">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Frequency</label>
+                              <input type="text" class="form-control boxs-style" formControlName="frequency" placeholder="2 - 2 - 2"/>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Instruction</label>
+                              <input type="text" class="form-control boxs-style" formControlName="instruction" placeholder="After meal"/>
+                            </div>
+                          </div>
+                          <div class="col-md-2" *ngIf="i == 0">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Add Dosage</label>
+                              <button (click)="addDosage()" type="button" class="form-control btn btn-info"><i class="fa fa-plus"></i></button>
+                            </div>
+                          </div>
+                          <div class="col-md-2" *ngIf="i != 0">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Remove</label>
+                              <button (click)="removeDosage(i)" type="button" class="form-control btn btn-danger">X</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <a [routerLink]='["/feed/prescription", patient]' type="submit" class="btn btn-warning"><i class="fa fa-reply"></i> Back</a> |
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Save Data</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

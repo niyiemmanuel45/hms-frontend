@@ -1,0 +1,133 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                <a [routerLink]='["/feed/patient/show", patient]' class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+                <a [routerLink]='["/feed/prescription/create", patient]' class="btn btn-success" style="float:right" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'tenant' || userRoleStatus == 'doctor' || userRoleStatus == 'nurse'"><i class="fa fa-plus"> </i> New Prescription</a>
+              </div><br/>
+              <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <div class="form-group">
+                        <label for="inputEmail3">Show</label>
+                        <select class="form-control" (change)="onPageSizeChange($event, patient)" id="styled-select" >
+                            <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="float-right">
+                        <button type="submit" data-toggle="modal" data-target="#filterModal" class="btn btn-sm bg-teal" style="float:right"><i class="fa fa-filter"> </i> Filter</button>    
+                      </div>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <div class="col-md-12">
+                      <ng-container *ngIf="(prescriptions.length > 0); else elseBlock">
+                        <div *ngFor="let item of prescriptions | paginate : {
+                          itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                          totalItems: pagination.count }">
+
+                            <div class="card card-widget">
+                              <div class="card-header">
+                                <div class="user-block">
+                                  <span class="username" style="color: green;">Dr. {{item.doctor.name}}</span>
+                                  <span class="description">Card number - <span style="color:blue">{{item.patient.cardNumber}}</span></span>
+                                </div>
+                                <!-- /.user-block -->
+                                <div class="card-tools">
+                                  <a [routerLink]='["/feed/prescription/details", patient, item.id]' type="button" class="btn btn-tool">
+                                    <i class="fas fa-eye" style="color: blue;"></i>
+                                  </a>
+                                  <button type="button" (click)="Delete(item)" class="btn btn-tool">
+                                    <i class="fas fa-trash" style="color: red;"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <!-- /.card-body -->
+                              <div class="card-footer card-comments">
+                                <div class="card-comment">
+                                  <div class="comment-text">
+                                    <span class="username">
+                                      <font color="red">Case History*:</font>
+                                      <span class="text-muted float-right">{{item.dateCreated | date: 'dd MMM yyyy'}}</span>
+                                    </span><!-- /.username -->
+                                    {{item.history}}
+                                  </div>
+                                  <!-- /.comment-text -->
+                                </div>                          
+                              </div>                        
+                            </div>
+                        </div>
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        <div style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Yet</div>
+                      </ng-template>  
+                    </div>
+                  </div>
+                  <div style="float:right" *ngIf="(prescriptions.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event, patient)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+
+<!-- Filter More Modal-->
+<div class="modal fade" id="filterModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Filtering</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="Filter()" autocomplete="off">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Doctor Name </label>
+                <input type="text" class="form-control boxs-style" id="Doctor" [(ngModel)]="filters.Doctor" name="Doctor" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Drug</label>
+                <input type="text" class="form-control boxs-style" id="CardNumber" [(ngModel)]="filters.Drug" name="Drug" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Patient</label>
+                <input type="text" class="form-control boxs-style" id="Status" [(ngModel)]="filters.Patient" name="Patient" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Start Date</label>
+                  <input type="date" class="form-control boxs-style" id="startDate" [(ngModel)]="filters.startDate" name="startDate" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">End Date</label>
+                  <input type="date" class="form-control boxs-style" id="endDate" [(ngModel)]="filters.endDate" name="endDate" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

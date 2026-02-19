@@ -1,0 +1,105 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+          <a [routerLink]='["/feed/hospital/config", organization.id]' class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+          <h4 style="text-align: center;" class="panel-title">INVOICE SECTION</h4>
+        </div><br/>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                  <h3 class="card-title">Treasurer Signature</h3>
+              </div>
+              <form #useTreasurerForm="ngForm" (ngSubmit)="UseTreasurer()">
+                <div class="card-body">
+                  <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input boxs-style" type="checkbox" name="treasurerFee" [(ngModel)]="organization.signature">
+                    <label for="customCheckbox1" class="custom-control-label">Use Treasurer Signature</label>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" type="submit" class="btn btn-primary">USE</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card card-warning">
+              <div class="card-header">
+                  <h3 class="card-title">Letter Head Invoice</h3>
+              </div>
+              <form #useInvoiceForm="ngForm" (ngSubmit)="UseInvoice()">
+                <div class="card-body">
+                  <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input boxs-style" type="checkbox" name="invoiceFee" [(ngModel)]="organization.letter_head_invoice">
+                    <label for="customCheckbox1" class="custom-control-label">Use Letter Head Invoice</label>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" type="submit" class="btn btn-warning">USE</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card card-success">
+              <div class="card-header">
+                  <h3 class="card-title">Letter Head Receipt</h3>
+              </div>
+              <form #useReceiptForm="ngForm" (ngSubmit)="UseReceipt()">
+                <div class="card-body">
+                  <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input boxs-style" type="checkbox" name="receiptFee" [(ngModel)]="organization.letter_head_receipt">
+                    <label for="customCheckbox1" class="custom-control-label">Use Letter Head Receipt</label>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" type="submit" class="btn btn-success">USE</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="card card-primary">
+              <div class="card-header">
+                  <h3 class="card-title">Upload Signature / Icon</h3>
+              </div>
+              <form [formGroup]="insertForm" (ngSubmit)="submit()">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Upload Type</label>
+                    <select class="form-control" formControlName="key">
+                      <option value="">Pick an upload </option>
+                      <option value="treasurer">Treasurer Signature</option>
+                      <option value="chief">Chief Health Officer Signature</option>
+                      <option value="director">Director of Health Signature</option>
+                      <option value="seal">Seal Icon</option>
+                    </select>
+                    <div *ngIf="key.touched && key.errors" class="errorMessage">
+                      <span *ngIf="key.hasError('required')">Please select an upload type.</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputFile">File input</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" formControlName="pictureURL" (change)="onFileChange($event)" class="form-control">
+                      </div>
+                    </div>
+                    <div *ngIf="pictureURL.touched && pictureURL.errors" class="errorMessage">
+                      <span *ngIf="pictureURL.hasError('required')">A file is required.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" id="replace" type="submit" class="btn btn-primary">Treasurer Upload</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

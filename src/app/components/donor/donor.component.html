@@ -1,0 +1,214 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+            <div class="panel-heading clearfix">
+              <a [routerLink]='["/feed/hospital/config", organization.id]' class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+              <button type="submit" data-toggle="modal" data-target="#addModal" class="btn btn-success" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'tenant'" style="float:right"><i class="fa fa-plus"> </i> Add New Donor</button>
+            </div><br/>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                          <div class="form-group">
+                              <label for="inputEmail3">Show</label>
+                              <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+                                  <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="float-right">
+                          <div class="input-group">
+                              <input type="text" (keyup)="Filter($event)" class="form-control input-search" placeholder="Search by name...">
+                              <span class="input-group-btn">
+                                  <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                              </span>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <th>Fullname</th>
+                                  <th>Email</th>
+                                  <th>Phone Number</th>
+                                  <th>Sex</th>
+                                  <th>Blood Group</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container *ngIf="(donors.length > 0); else elseBlock">
+                                  <tr *ngFor="let item of donors | paginate : {
+                                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                      totalItems: pagination.count
+                                  }; let i = index">
+                                      <th scope="row">{{ (pagination.page - 1) * pagination.pageSize + i + 1 }}</th>
+                                      <td>{{item.fullname}}</td>
+                                      <td>{{item.email}}</td>
+                                      <td>{{item.phoneNumber}}</td>
+                                      <td>{{item.sex}}</td>
+                                      <td>{{item.bloodGroup}}</td>
+                                      <td>
+                                          <button type="submit" data-toggle="modal" data-target="#editModal" title="Edit Donor" (click)="showPayItems(item)" class="btn btn-primary" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'tenant'"><i class="fa fa-edit"></i></button> |
+                                          <button type="button" (click)="DeleteTest(item)" class="btn btn-danger" title="Delete Donor" *ngIf="userRoleStatus == 'power_user'" ><i class="fa fa-trash"></i></button>
+                                      </td>
+                                  </tr>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                  <tr>
+                                      <td colspan="7" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                                  </tr>
+                              </ng-template>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div style="float:right" *ngIf="(donors.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+<!-- Add Modal-->
+<div class="modal fade" id="addModal">
+  <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 class="modal-title">Create Donor</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <form [formGroup]="insertForm" (ngSubmit)="AddDepartment()" autocomplete="off">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Fullname</label>
+                      <input type="text" class="form-control boxs-style" formControlName="name" />
+                      <div *ngIf="name.touched && name.errors" class="errorMessage">
+                          <span *ngIf="name.hasError('required')">Fullname is required.</span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Sex</label>
+                      <select class="form-control" formControlName="sex">
+                          <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                      </select>
+                      <div *ngIf="sex.touched && sex.errors" class="errorMessage">
+                          <span *ngIf="sex.hasError('required')">Sex is required.</span>
+                      </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Email</label>
+                      <input type="text" class="form-control boxs-style" formControlName="email" />
+                      <div *ngIf="email.touched && email.errors" class="errorMessage">
+                          <span *ngIf="email.hasError('required')">Email is required.</span>
+                          <span *ngIf="email.hasError('email') || email.hasError('pattern')">Enter a valid email.</span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Age</label>
+                      <input type="text" class="form-control boxs-style" formControlName="age" />
+                      <div *ngIf="age.touched && age.errors" class="errorMessage">
+                          <span *ngIf="age.hasError('required')">Age is required.</span>
+                      </div>
+                  </div>
+
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Phone Number</label>
+                      <input type="text" class="form-control boxs-style" formControlName="phoneNumber" />
+                      <div *ngIf="phoneNumber.touched && phoneNumber.errors" class="errorMessage">
+                        <span *ngIf="phoneNumber.hasError('required')">Phone number is required.</span>
+                        <span *ngIf="phoneNumber.hasError('pattern')">Please, Enter 11 digit Mobile Number.</span>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputEmail1">Blood Group</label>
+                      <select formControlName="bloodGroupId" class="form-control boxs-style">
+                        <option *ngFor="let cat of bloodBanks" [value]="cat.id">{{cat.bloodGroup}}</option>
+                      </select>
+                      <div *ngIf="bloodGroupId.touched && bloodGroupId.errors" class="errorMessage">
+                          <span *ngIf="bloodGroupId.hasError('required')">Blood group is required.</span>
+                      </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="ModalClose" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Add</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Donor</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="empDetail" (ngSubmit)="UpdateDepartment()" autocomplete="off">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Fullname</label>
+                  <input type="text" class="form-control boxs-style" formControlName="name" />
+                  <input type="hidden" class="form-control boxs-style" formControlName="id" />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Sex</label>
+                <select class="form-control" formControlName="sex">
+                    <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Email</label>
+                  <input type="text" class="form-control boxs-style" formControlName="email" />
+              </div>
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Age</label>
+                  <input type="text" class="form-control boxs-style" formControlName="age" />
+              </div>
+
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Phone Number</label>
+                  <input type="text" class="form-control boxs-style" formControlName="phoneNumber" />
+              </div>
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Blood Group</label>
+                  <select formControlName="bloodGroupId" class="form-control boxs-style">
+                    <option *ngFor="let cat of bloodBanks" [value]="cat.id">{{cat.bloodGroup}}</option>
+                  </select>
+              </div>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

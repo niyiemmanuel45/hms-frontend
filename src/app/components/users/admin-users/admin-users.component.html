@@ -1,0 +1,88 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <div class="float-left">
+                        <a [routerLink]='["/feed/hospital/config", organization.id]' type="button" class="btn btn-default"><i class="fa fa-reply"> </i> Back</a>
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <h4 class="panel-title">{{ organization.name }} Administrators</h4>
+                    </div>
+                    <div class="col-lg-4">
+                      <a [routerLink]='["/feed/users/add-user", organization.id]' type="button" class="btn btn-success" style="float: right;"><i class="fa fa-plus"> </i> Add New Administrator</a>
+                    </div>
+                  </div>
+                  <br/>
+              </div>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                          <div class="form-group">
+                            <label for="inputEmail3">Show</label>
+                            <select class="form-control" (change)="onPageSizeChange($event, orgId)" id="styled-select" >
+                                <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                            </select>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                              <div class="input-group">
+                                  <input type="text" (keyup)="Filter($event, orgId)" class="form-control input-search" placeholder="Search by name...">
+                                  <span class="input-group-btn">
+                                      <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="table-responsive">
+                      <table class="table table-hover">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <th>Full Name</th>
+                                  <th>Email</th>
+                                  <th>Phone Number</th>
+                                  <th>Role</th>
+                                  <th>Action</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <ng-container *ngIf="(users.length > 0); else elseBlock">
+                                  <tr *ngFor="let item of users | paginate : {
+                                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                      totalItems: pagination.count
+                                  }; let i = index">
+                                      <th scope="row">{{ (pagination.page - 1) * pagination.pageSize + i + 1 }}</th>
+                                      <td>{{item.lastName}} {{item.firstName}}</td>
+                                      <td>{{item.email}}</td>
+                                      <td>{{item.phoneNumber}}</td>
+                                      <td><label class="btn btn-sm bg-teal">{{item.role}}</label></td>
+                                      <td>
+                                          <a [routerLink]='["/feed/users/show/", item.userId]' type="button" class="btn btn-primary" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'tenant'"><i class="fa fa-eye"></i></a> |
+                                          <button type="button" (click)="deleteUser(item, orgId)" class="btn btn-danger" *ngIf="userRoleStatus == 'power_user'"><i class="fa fa-trash"></i></button>
+                                      </td>
+                                  </tr>
+                              </ng-container>
+                              <ng-template #elseBlock>
+                                  <tr>
+                                      <td colspan="6" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                                  </tr>
+                              </ng-template>
+                          </tbody>
+                      </table>
+                  </div>
+                  <div style="float:right" *ngIf="(users.length > 0)">
+                    <pagination-controls class="paginate-style"
+                    (pageChange)="onPageChange($event, orgId)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

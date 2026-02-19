@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+.paginate-style{
+  float:right
+}
+#styled-select {
+  width: 80px;
+}
+.boxs-style{
+  position: relative;
+  z-index: 1;
+}
+.errorMessage {
+  color: red;
+}
+span {
+  font-size: small;
+}

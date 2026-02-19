@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="form-group">
+        <label for="inputEmail3">Show</label>
+        <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+            <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <h4 style="text-align: center;">All Transactions</h4>
+    </div>
+    <div class="col-lg-4">
+      <div class="float-right">
+        <button type="submit" data-toggle="modal" data-target="#filterModal" class="btn btn-sm bg-teal" style="float:right"><i class="fa fa-filter"> </i> Filter</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Patient Name</th>
+                  <th>Reference</th>
+                  <th>Narration</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date Created</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              <ng-container *ngIf="(transactions.length > 0); else elseBlock">
+                  <tr *ngFor="let item of transactions | paginate : {
+                      itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                      totalItems: pagination.count
+                  }; let i = index">
+                      <th scope="row">{{ (pagination.page - 1) * pagination.pageSize + i + 1 }}</th>
+                      <td>{{item.patientName}}</td>
+                      <td><label class="btn btn-success">{{item.transactionReference}}</label></td>
+                      <td>{{item.narration}}</td>
+                      <td><label class="btn btn-info">{{item.amountPaid | currency:'NGN ':'symbol'}}</label></td>
+                      <td *ngIf="(item.status == 'PENDING')">
+                        <label class="btn btn-warning">NOT PAID</label>
+                      </td>
+                      <td *ngIf="(item.status == 'TERMINATED')">
+                        <label class="btn btn-danger">{{item.status}}</label>
+                      </td>
+                      <td *ngIf="(item.status == 'PAID')">
+                        <label class="btn btn-success">{{item.status}}</label>
+                      </td>
+                      <td>{{item.dateCreated | date: 'dd MMM yyyy'}}</td>
+                      <td>
+                          <button type="button" *ngIf="(item.status == 'PENDING')" (click)="confirmPayment(item.transactionReference)" class="btn btn-primary" title="Confirm Payment"><i class="fa fa-check"></i></button> 
+                          <button type="button" *ngIf="(item.status == 'PAID')" (click)="PrintReceipt(item.billId)" class="btn btn-primary" title="Print Receipt"><i class="fa fa-file-download"></i></button>
+                          <button type="button" *ngIf="(item.status == 'PENDING' && userRoleStatus == 'power_user')" (click)="Terminate(item.transactionReference)" class="btn btn-danger" title="Terminate Transaction"><i class="fa fa-ban"></i></button>
+                      </td>
+                  </tr>
+              </ng-container>
+              <ng-template #elseBlock>
+                  <tr>
+                      <td colspan="8" style="font-size:14px; font-family:Trebuchet MS; text-align: center;">No Record Found</td>
+                  </tr>
+              </ng-template>
+          </tbody>
+      </table>
+      <div style="float:right" *ngIf="(transactions.length > 0)">
+        <pagination-controls class="paginate-style"
+          (pageChange)="onPageChange($event)">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+</div><!-- /.container-fluid -->
+
+
+<!-- Filter More Modal-->
+<div class="modal fade" id="filterModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Filtering</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="Filter()" autocomplete="off">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Transaction Reference</label>
+                <input type="text" class="form-control boxs-style" id="reference" [(ngModel)]="filters.reference" name="reference" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Patient Name</label>
+                <input type="text" class="form-control boxs-style" id="patientName" [(ngModel)]="filters.patientName" name="patientName" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Status</label>
+                <input type="text" class="form-control boxs-style" id="status" [(ngModel)]="filters.status" name="status" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Start Date</label>
+                  <input type="date" class="form-control boxs-style" id="startDate" [(ngModel)]="filters.startDate" name="startDate" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="exampleInputEmail1">End Date</label>
+                  <input type="date" class="form-control boxs-style" id="endDate" [(ngModel)]="filters.endDate" name="endDate" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

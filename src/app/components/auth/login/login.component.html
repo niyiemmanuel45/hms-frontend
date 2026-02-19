@@ -1,0 +1,68 @@
+<div class="login">
+  <div class="user-login-5">
+      <div class="row bs-reset">
+          <div class="col-md-6 bs-reset mt-login-5-bsfix">
+              <div class="login-bg" style="background-image:url('../assets/pages/img/login/doc3.png')"> </div>
+          </div>
+          <div class="col-md-6 login-container bs-reset mt-login-5-bsfix">
+              <div class="login-content">
+                  <div class="hi-care-container" style="display: flex; align-items: center;">
+                      <span style="font-size: 60px; font-weight: bold; color: #4CAF50; margin-right: 10px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); font-family: Serif;">Hi</span>
+                      <span style="font-size: 60px; font-weight: bold; color: #2196F3; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">Care</span>
+                  </div>
+                  <p style="font-style: italic;"> Login here!</p>
+                  <form [formGroup]="insertForm" (ngSubmit)="onSubmit()" class="login-form" autocomplete="off">
+                      <div class="row">
+                          <div class="col-xs-6">
+                              <input formControlName="Email" class="form-control" type="text" placeholder="Username / Employee ID"/>
+                              <div *ngIf="Email.touched && Email.errors" class="errorMessage">
+                                <span *ngIf="Email.hasError('required')">Username / employee id is required!</span>
+                              </div>
+                          </div>
+                          <div class="col-xs-6">
+                              <input formControlName="Password" class="form-control " type="password" placeholder="Password"/>
+                              <div *ngIf="Password.touched && Password.errors" class="errorMessage">
+                                <span *ngIf="Password.hasError('required')">Password is required!</span>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-sm-6">
+                            <div>
+                              <button class="btn green" type="submit">
+                                <span *ngIf="!isLoading">Sign In</span>
+                                <span *ngIf="isLoading" class="fa fa-spinner"> Please wait!</span>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+
+                          </div>
+                      </div><br/>
+                      <div class="row">
+                          <div class="col-sm-6">
+                            <div class="forgot-password">
+                              <a [routerLink]='["/forgot-password"]' id="forget-password" class="forget-password">Forgot Password?</a>
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+
+                          </div>
+                      </div>
+                  </form>
+              </div>
+              <div class="login-footer">
+                  <div class="row bs-reset">
+                      <div class="col-xs-5 bs-reset">
+                      </div>
+                      <div class="col-xs-7 bs-reset">
+                          <div class="login-copyright text-right">
+                              <p>&copy; 2024 Highpoint Dynamics | All rights reserved </p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

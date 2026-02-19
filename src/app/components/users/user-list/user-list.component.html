@@ -1,0 +1,144 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <h4 class="panel-title">All Users</h4>
+                    </div>
+                    <div class="col-lg-4">
+
+                    </div>
+                  </div>
+                  <br/>
+              </div>
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-8">
+                        <div class="form-group">
+                          <label for="inputEmail3">Show</label>
+                          <select class="form-control" (change)="onPageSizeChange($event)" id="styled-select" >
+                              <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="float-right">
+                              <div class="input-group">
+                                  <input type="text" (keyup)="Filter($event)" class="form-control input-search" placeholder="Search by name...">
+                                  <span class="input-group-btn">
+                                      <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card card-solid">
+                    <div class="card-body pb-0">
+                      <div class="row">  
+                        <ng-container *ngIf="(users.length > 0); else elseBlock">                    
+                          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column" *ngFor="let item of users | paginate : {
+                                    itemsPerPage: pagination.pageSize, currentPage: pagination.page,
+                                    totalItems: pagination.count
+                                }; let i = index">
+                            <div class="card bg-light d-flex flex-fill">
+                              <div class="card-header text-muted border-bottom-0">
+                                <span class="btn btn-sm bg-teal"> {{item.hospital?.code}}</span> 
+                              </div>
+                              <div class="card-body pt-0">
+                                <div class="row">
+                                  <div class="col-7">
+                                    <h2 class="lead"><b>{{item.lastName}} {{item.firstName}}</b></h2>
+                                    <p class="text-muted text-sm"><b>Email : </b> {{item.email}} </p>
+                                    <ul class="ml-4 mb-0 fa-ul text-muted">
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: {{item.houseNumber}}, {{item.streetAddress}}, {{item.nearestBusStop}}, {{item.city.name}}, {{item.region.name}}.</li>
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{item.phoneNumber}}</li>
+                                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-user"></i></span> Username: {{item.userName}}</li>
+                                    </ul>
+                                  </div>
+                                  <div class="col-5 text-center">
+                                    <a [routerLink]='["/feed/patient-avatar", item.userId]'>
+                                      <img src="{{ (item.picturePath == '' || item.picturePath == 'N/A') ? '/assets/admin/admintemplates/img/user1-128x128.jpg' : item.picturePath }}" style="width: 128px; height:128px;" alt="user-avatar" class="img-circle img-fluid">
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="card-footer">
+                                <div class="row">
+                                  <div class="col-md-6">
+                                    <div class="text-left">
+                                      <button class="btn btn-sm btn-info"> {{item.role}} </button>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="text-right">
+                                      <a [routerLink]='["/feed/users/show/", item.userId]' class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View Profile
+                                      </a> | 
+                                      <button type="submit" data-toggle="modal" data-target="#editModal" (click)="showUser(item)" class="btn btn-sm bg-teal"><i class="fa fa-cogs"></i></button> | 
+                                      <button type="button" (click)="deleteUser(item)" class="btn btn-sm btn-danger" *ngIf="userRoleStatus == 'power_user'"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                  </div>
+                                </div> 
+                              </div>
+                            </div>
+                          </div>
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        <div class="col-md-12">
+                          <h2 style="font-size:14px; font-family:Trebuchet MS; text-align: center; color: red;">No Record Found</h2>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div style="float:right" *ngIf="(users.length > 0)">
+                    <pagination-controls class="paginate-style"
+                     (pageChange)="onPageChange($event)">
+                    </pagination-controls>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->
+
+<!-- Edit More Modal-->
+<div class="modal fade" id="editModal">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Swap Role</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <form [formGroup]="userDetail" (ngSubmit)="SwapRole()" autocomplete="off">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="exampleInputPassword1">Email</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" formControlName="email" readonly style="background-color: #fff;">
+              <input type="hidden" class="form-control" id="exampleInputEmail1" formControlName="userId" readonly style="background-color: #fff;">
+              <input type="hidden" class="form-control" id="exampleInputEmail1" formControlName="oldRoleId" readonly style="background-color: #fff;">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Full Name</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" formControlName="lastName" readonly style="background-color: #fff;">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Current Role</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" formControlName="roleName" readonly style="background-color: #fff;">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">New Role</label>
+              <select class="form-control" formControlName="roleId">
+                <option *ngFor="let item of roles" [value]="item.roleId">{{item.assignName}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" id="ModalShut" class="btn btn-default" data-dismiss="modal">Back</button>
+              <button type="submit" class="btn btn-success">Swap</button>
+          </div>
+        </form>
+    </div>
+</div>
+</div>

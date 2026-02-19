@@ -1,0 +1,138 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12">
+          <div class="panel panel-white">
+              <div class="panel-heading clearfix">
+                  <h4 class="panel-title">Update Staff Profile</h4>
+              </div>
+              <div class="panel-body">
+                <form method="post" #editForm="ngForm" (ngSubmit)="UpdateOrg()" autocomplete="off">
+                  <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">FirstName</label>
+                            <input type="text" class="form-control" name="firstName" [(ngModel)]="staff.firstName">
+                            <input type="hidden" class="form-control" name="id" [(ngModel)]="staff.id">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail2">LastName</label>
+                        <input type="text" class="form-control" name="lastName" [(ngModel)]="staff.lastName">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail3">Email</label>
+                        <input type="text" class="form-control" name="email" [(ngModel)]="staff.email">
+                      </div>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail4">Phone Number</label>
+                      <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="staff.phoneNumber">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail5">Employee ID</label>
+                      <input type="text" class="form-control" name="employeeId" [(ngModel)]="staff.employeeId">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail6">Staff Logo</label>
+                      <input type="file" class="form-control" name="Picture" (change)="onFileChange($event)">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail7">UserName</label>
+                        <input type="text" class="form-control" name="userName" [(ngModel)]="staff.userName">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail8">Gender</label>
+                        <select name="gender" [(ngModel)]="staff.gender"  class="form-control boxs-style">
+                          <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail9">DOB</label>
+                        <input type="date" class="form-control" name="dob" [(ngModel)]="staff.dob">
+                      </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail7">House Number</label>
+                        <input type="text" class="form-control" name="houseNumber" [(ngModel)]="staff.houseNumber">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail8">Address</label>
+                        <input type="text" class="form-control" name="streetAddress" [(ngModel)]="staff.streetAddress">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail9">Nearest Bus Stop</label>
+                        <input type="text" class="form-control" name="nearestBusStop" [(ngModel)]="staff.nearestBusStop">
+                      </div>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail10">Department</label>
+                      <select name="departmentId" [(ngModel)]="staff.department.id"  class="form-control boxs-style">
+                          <option *ngFor="let country of departments" [value]="country.id">{{country.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail10">State</label>
+                      <select name="stateId" [(ngModel)]="staff.state.id"  class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                          <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail10">City</label>
+                      <select name="cityId" [(ngModel)]="staff.city.id"  class="form-control boxs-style">
+                          <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12" *ngIf="imageSrc">
+                    <div class="form-group">
+                      <label for="exampleInputEmail12">Preview</label>
+                      <div class="image-crop">
+                        <img [src]="imageSrc" style="width: 20%; height: 20%;" alt="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                    <a [routerLink]='["/feed/hospital"]' type="submit" class="btn btn-warning"><i class="fa fa-reply"></i> Back</a> |
+                    <button type="submit" class="btn btn-success"><i class="fa fa-plus"></i> Save Data</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      </div>
+  </div><!-- Row -->
+</div><!-- Main Wrapper -->

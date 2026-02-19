@@ -1,0 +1,135 @@
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-3">
+          <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                  <div class="text-center">
+                      <a [routerLink]='["/feed/change-avatar", user.userId]' title="Change Avatar"><img class="profile-user-img img-fluid img-circle"
+                          src="{{(user.picturePath == '') ? '/assets/admin/admintemplates/img/user4-128x128.jpg' : user.picturePath}}" alt="profile picture">
+                      </a>
+                  </div>
+
+                  <h3 class="profile-username text-center">{{user.lastName}} {{user.firstName}}</h3>
+
+                  <p class="text-muted text-center">{{user.role}}</p>
+
+                  <ul class="list-group list-group-unbordered mb-3">
+                      <li class="list-group-item">
+                        <b>Phone</b> <a class="float-right">{{user.phoneNumber}}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <b>Gender</b> <a class="float-right">{{user.gender}}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <b>Hospital</b> <a class="float-right">{{ user.hospital?.code }}</a>
+                      </li>
+                      <li *ngIf="user.age > 0" class="list-group-item">
+                        <b>Age</b> <a class="float-right">{{ user.age }} years</a>
+                      </li>
+                      <li *ngIf="user.dob" class="list-group-item">
+                        <b>DOB</b> <a class="float-right">{{ user.dob | date: 'dd MMM yyyy' }}</a>
+                      </li>
+                      <li *ngIf="user.occupation !== 'N/A'" class="list-group-item">
+                        <b>Occupation</b> <a class="float-right">{{ user.occupation }}</a>
+                      </li>
+                      <li *ngIf="user.cardNumber !== 'N/A'" class="list-group-item">
+                        <b>Card Number</b> <a class="float-right">{{ user.cardNumber }}</a>
+                      </li>
+                      <li class="list-group-item">
+                        <a [routerLink]='["/feed/users"]' class="btn btn-danger">BACK</a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="card">
+              <div class="card-header p-2">
+                  <ul class="nav nav-pills">
+                      <li class="nav-item"><font color="red">{{user.userName | titlecase}}'s</font>  Profile</li>
+                  </ul>
+              </div>
+              <div class="card-body">
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">First Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.firstName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Last Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.lastName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Email</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.email}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">User Name</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.userName}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Address</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.houseNumber == null ? 'N/A' : user.houseNumber +', '+ user.streetAddress + ', '+ user.nearestBusStop}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">City</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.city == null ? 'N/A' : user.city.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">State</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{user.region == null ? 'N/A' : user.region.name}}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="inputName" class="col-sm-3 col-form-label">Country</label>
+                      <div class="col-sm-9">
+                          <input type="email" class="form-control" value="{{ user.country == null ? 'N/A' : user.country.name }}" readonly style="background-color: #fff">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-default" *ngIf="(userRoleStatus == 'power_user' || userRoleStatus == 'client_admin')">
+            <div class="card-header">
+                <h3 class="card-title">Todo List</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <form [formGroup]="activateForm">
+                        <button type="submit" class="btn btn-success btn-block" style="text-decoration: none;" (click)="activate(user.userId)">Activate Account</button>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <form [formGroup]="blockForm">
+                        <button type="submit" class="btn btn-danger btn-block" style="text-decoration: none;" (click)="blockNUnblockUser(user.userId)">Block/Unblock Account</button>
+                    </form>
+                </div>
+                <div class="form-group">
+                    <form [formGroup]="resetForm">
+                        <button type="submit" class="btn btn-warning btn-block" style="text-decoration: none;" (click)="ResetPassword(user.userId)">Reset Password</button>
+                        <!-- <small>If reset is done, your default password will be <font color="red"><b>P@55word</b></font></small> -->
+                    </form>
+                </div>
+                <div class="form-group">
+                    <form [formGroup]="resendForm">
+                        <button type="submit" class="btn btn-primary btn-block" style="text-decoration: none;" (click)="ResendConfirmationLink(user.userId)">Resend Confirmation Link</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
