@@ -14,6 +14,7 @@ import { AccountService } from '../services/account.service';
 export class JwtInterceptor implements HttpInterceptor {
 
   private isTokenRefreshing: boolean = false;
+  private isLoggingOut: boolean = false;
 
   // helper = new JwtHelperService();
 
@@ -47,9 +48,13 @@ export class JwtInterceptor implements HttpInterceptor {
               this.router.navigateByUrl('/access-denied');
               break;
             case 401:
-              console.log("Session destroyed ...");
-              this.toastr.error('Session destroyed', error.status.toString());
-              return <any>this.acct.logout();
+              if (!this.isLoggingOut) {
+                this.isLoggingOut = true;
+                console.log("Session destroyed ...");
+                this.toastr.error('Session destroyed', error.status.toString());
+                this.acct.logout();
+              }
+              return throwError(() => error);
               // console.log("Token expired. Attempting refresh ...");
               // return this.handleHttpResponseError(request, next);
             case 404:

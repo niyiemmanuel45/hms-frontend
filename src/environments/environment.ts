@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://hmsniyi.runasp.net/',
+    apiUrl: 'https://hmsniyi.runasp.net/',
     appid: 'HPD',
 };

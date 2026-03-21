@@ -18,7 +18,8 @@ export class HospitalService {
   }
 
   GetByCode(code: string): Observable<SingleResult<Hospital>> {
-    return this.http.get<SingleResult<Hospital>>(`${this.baseUrl}api/Hospitals/code/`+ code);
+    const headers = { 'tenantid': code, 'x-tenant-id': '' };
+    return this.http.get<SingleResult<Hospital>>(`${this.baseUrl}api/Hospitals/code`, { headers });
   }
 
   GetAll(search: string, pagination: Pagination): Observable<PaginatedResult<Hospital>>
@@ -43,6 +44,7 @@ export class HospitalService {
     formData.append('WebsiteURL', model.websiteURL);
     formData.append('PhoneNumber', model.phoneNumber);
     formData.append('CityId', model.cityId);
+    formData.append('LgaId', model.lgaId);
     formData.append('StateId', model.stateId);
     formData.append('CountryId', model.countryId);
 

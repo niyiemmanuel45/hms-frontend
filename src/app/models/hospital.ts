@@ -42,6 +42,7 @@ export interface AddHospitalDto {
   countryId: string;
   stateId: string;
   cityId: string;
+  lgaId: string;
 }
 
 export class UpdateHospitalDto {

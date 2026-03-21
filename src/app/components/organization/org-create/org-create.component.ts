@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AddHospitalDto } from 'src/app/models/hospital';
 import { ICurrentUser } from 'src/app/models/icurrent-user';
+import { Pagination } from 'src/app/models/pagination';
 import { AccountService } from 'src/app/services/account.service';
 import { CountryService } from 'src/app/services/country.service';
 import { HospitalService } from 'src/app/services/hospital.service';
@@ -71,6 +72,7 @@ export class OrgCreateComponent {
         const {items} = data.responseData;
         this.countries = items;
     });
+
 
     this.name = new FormControl('', [Validators.required]);
     this.code = new FormControl('', [Validators.required]);
