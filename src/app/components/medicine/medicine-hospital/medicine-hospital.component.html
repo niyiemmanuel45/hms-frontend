@@ -11,7 +11,7 @@
                       <div class="col-lg-8">
                           <div class="form-group">
                               <label for="inputEmail3">Show</label>
-                              <select class="form-control" (change)="onPageSizeChange($event, code)" id="styled-select" >
+                              <select class="form-control" (change)="onPageSizeChange($event, tenantCode)" id="styled-select" >
                                   <option *ngFor="let size of pagination.pageSizes" [ngValue]="size">{{ size }}</option>
                               </select>
                           </div>
@@ -47,7 +47,7 @@
                                       <td><label class="btn btn-success">{{item.quantity}}</label></td>
                                       <td>
                                           <button type="submit" data-toggle="modal" data-target="#editModal" title="Edit Medicine" (click)="showPayItems(item)" class="btn btn-primary" *ngIf="userRoleStatus == 'power_user' || userRoleStatus == 'client_admin' || userRoleStatus == 'tenant'"><i class="fa fa-edit"></i></button> |
-                                          <button type="button" (click)="DeleteTest(item, code)" class="btn btn-danger" title="Delete Medicine" *ngIf="userRoleStatus == 'power_user'" ><i class="fa fa-trash"></i></button>
+                                          <button type="button" (click)="DeleteTest(item, tenantCode)" class="btn btn-danger" title="Delete Medicine" *ngIf="userRoleStatus == 'power_user'" ><i class="fa fa-trash"></i></button>
                                       </td>
                                   </tr>
                               </ng-container>
@@ -61,7 +61,7 @@
                   </div>
                   <div style="float:right" *ngIf="(departments.length > 0)">
                     <pagination-controls class="paginate-style"
-                     (pageChange)="onPageChange($event, code)">
+                     (pageChange)="onPageChange($event, tenantCode)">
                     </pagination-controls>
                   </div>
               </div>

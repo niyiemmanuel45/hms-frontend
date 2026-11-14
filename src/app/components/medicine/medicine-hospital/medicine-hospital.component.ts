@@ -20,7 +20,7 @@ export class MedicineHospitalComponent {
   departments : Medicine[] = [];
   organization : Hospital;
   userRoleStatus : string;
-  code : string;
+  tenantCode : string;
   orgId : number;
   department : Medicine;
   addDto : MedicineDto;
@@ -50,10 +50,9 @@ export class MedicineHospitalComponent {
   ngOnInit():void {
     this.route.data.subscribe(data => {
       this.organization = data['organization'].responseData;
-      this.code = this.organization?.tenant?.orgCode || 'HPD';
+      this.tenantCode = this.organization?.tenant?.orgCode || 'HPD';
       this.orgId = this.organization.id;
-      // console.log(this.organization);
-      this.GetDepartments(this.code);
+      this.GetDepartments(this.tenantCode);
     });
 
     this.catServ.GetAllWithoutPage().subscribe(
@@ -103,8 +102,8 @@ export class MedicineHospitalComponent {
     });
   }
 
-  GetDepartments(code: string){
-    this.deptServ.GetAllByCode(code, this.pagination)
+  GetDepartments(tenantCode: string){
+    this.deptServ.GetAllByTenant(tenantCode, this.pagination)
       .subscribe((response: PaginatedResult<Medicine>) => {
         this.departments = response.responseData.items as Medicine[];
         this.pagination.count = response.responseData.totalSize;
@@ -121,14 +120,14 @@ export class MedicineHospitalComponent {
     });
   }
 
-  onPageChange(event: any, code: string){
+  onPageChange(event: any, tenantCode: string){
     this.pagination.page = event;
-    this.GetDepartments(code);
+    this.GetDepartments(tenantCode);
   }
-  onPageSizeChange(event: any, code: string){
+  onPageSizeChange(event: any, tenantCode: string){
     this.pagination.pageSize = event.target.value;
     this.pagination.page = 1;
-    this.GetDepartments(code);
+    this.GetDepartments(tenantCode);
   }
 
   AddDepartment() {
@@ -139,7 +138,7 @@ export class MedicineHospitalComponent {
         this.insertForm.reset();
         document.getElementById("ModalClose")?.click();
         this.toastr.success('Medicine added Successfully');
-        this.GetDepartments(this.code);
+        this.GetDepartments(this.tenantCode);
       }, error => {
         if(error.length > 0){
           for(let err in error){
@@ -178,7 +177,7 @@ export class MedicineHospitalComponent {
       this.deptServ.Update(edit.id, this.addDto).subscribe(next => {
         document.getElementById("ModalShut")?.click();
         this.toastr.success('Medicine updated Successfully');
-        this.GetDepartments(this.code);
+        this.GetDepartments(this.tenantCode);
       }, error => {
         if(error.length > 0){
           for(let err in error){
@@ -197,7 +196,7 @@ export class MedicineHospitalComponent {
     }    
   }
 
-  DeleteTest(dept : Medicine, code: string) : void
+  DeleteTest(dept : Medicine, tenantCode: string) : void
   {
     Swal.fire({
       title: 'Are you sure?',
@@ -210,10 +209,10 @@ export class MedicineHospitalComponent {
       if (result.value) {
         this.deptServ.Delete(dept.id).subscribe(next => {
           this.toastr.success('Medicine deleted Successfully');
-          this.GetDepartments(code);
+          this.GetDepartments(tenantCode);
         }, error => {
           this.toastr.success(error.message);
-          this.GetDepartments(code);
+          this.GetDepartments(tenantCode);
         });
 
       } else if (result.dismiss === Swal.DismissReason.cancel) {

@@ -23,9 +23,9 @@ export class MedicineService {
     .pipe(catchError(this.handleError));
   }
 
-  GetAllByCode(code: string, pagination: Pagination): Observable<PaginatedResult<Medicine>>
+  GetAllByTenant(tenantOrgCode: string, pagination: Pagination): Observable<PaginatedResult<Medicine>>
   {
-    return this.http.get<PaginatedResult<Medicine>>(`${this.baseUrl}api/Medicine/by-tenant/${code}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
+    return this.http.get<PaginatedResult<Medicine>>(`${this.baseUrl}api/Medicine/by-tenant/${tenantOrgCode}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
     .pipe(catchError(this.handleError));
   }
 
