@@ -2,6 +2,13 @@ import { City, Lga } from "./city";
 import { Country } from "./country";
 import { Region } from "./region";
 
+export interface TenantListModel {
+  id: number;
+  orgName: string;
+  orgCode: string;
+  logoUrl: string;
+}
+
 export interface Hospital {
   id: number;
   code: string;
@@ -25,6 +32,7 @@ export interface Hospital {
   lga?: Lga;
   country: Country;
   state: Region;
+  tenant?: TenantListModel;
   dateCreated: string;
 }
 

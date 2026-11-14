@@ -27,6 +27,8 @@ export class OrgConfigComponent {
   currentUserId: string;
   userRoleStatus : string;
   orgId : number;
+  tenantId : number;
+  tenantCode : string;
   chargesDto : InvoiceChargesVM;
   formProduct: FormGroup;
   hasTenantSubscribed: boolean;
@@ -54,7 +56,9 @@ export class OrgConfigComponent {
     this.route.data.subscribe(data => {
       this.organization = data['organization'].responseData;
       this.orgId = this.organization.id;
-      this.GetAllSettings(this.organization.id);
+      this.tenantId = this.organization?.tenant?.id ?? this.organization.id;
+      this.tenantCode = this.organization?.tenant?.orgCode || 'HPD';
+      this.GetAllSettings(this.tenantId);
     });
     this.dataarray.push(this.setting);
     this.userRoleStatus = strArr[4];
@@ -78,8 +82,8 @@ export class OrgConfigComponent {
     const processedData = {
       ...this.dataarray
     };
-    let sortCode = this.editForm?.value.orgCode;
-    let id = this.editForm?.value.id;
+    let sortCode = this.tenantCode;
+    let id = this.tenantId;
     var obj = Object.assign([], processedData)
     const payload = obj;
     // console.log({"settings": payload});
@@ -108,7 +112,7 @@ export class OrgConfigComponent {
     this.dataarray.splice(index);
   }
 
-  deleteConfig(config: Setting, id: number) : void
+  deleteConfig(config: Setting) : void
   {
     Swal.fire({
       title: 'Are you sure?',
@@ -121,13 +125,13 @@ export class OrgConfigComponent {
       if (result.value) {
         this.organSettings.DeleteSettings(config.id).subscribe(next => {
           this.toastr.success('Hospital configuration settings deleted Successfully');
-          this.GetAllSettings(id);
+          this.GetAllSettings(this.tenantId);
           setTimeout(function(){
             window.location.reload();
         }, 1000);
         }, error => {
           this.toastr.error(error.message);
-          this.GetAllSettings(id);
+          this.GetAllSettings(this.tenantId);
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire(
