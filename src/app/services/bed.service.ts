@@ -40,7 +40,7 @@ export class BedService {
   }
 
   DischargePatient(id: number) {
-    return this.http.put(this.baseUrl + `api/BedAllotment/discharge-patients/${id}`, {});
+    return this.http.put(this.baseUrl + `api/BedAllotment/discharge-patient/${id}`, {});
   }
 
   Insert(model: BedDto) {

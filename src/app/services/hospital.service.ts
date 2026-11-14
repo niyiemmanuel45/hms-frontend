@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpEvent, HttpRequest } from '@angular/
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Pagination, PaginatedResult, SingleResult } from '../models/pagination';
+import { Pagination, PaginatedResult } from '../models/pagination';
 import { AddHospitalDto, Hospital, UpdateHospitalDto } from '../models/hospital';
 
 @Injectable({
@@ -19,11 +19,6 @@ export class HospitalService {
 
   GetByTenant(tenantId: string): Observable<PaginatedResult<Hospital>> {
     return this.http.get<PaginatedResult<Hospital>>(`${this.baseUrl}api/Hospitals/by-tenant/${tenantId}?pageSize=1&pageNumber=1`);
-  }
-
-  GetByCode(code: string): Observable<SingleResult<Hospital>> {
-    const headers = { 'tenantid': code, 'x-tenant-id': '' };
-    return this.http.get<SingleResult<Hospital>>(`${this.baseUrl}api/Hospitals/code`, { headers });
   }
 
   GetAll(search: string, pagination: Pagination): Observable<PaginatedResult<Hospital>>
@@ -111,7 +106,7 @@ export class HospitalService {
 
     formData.append('Logo', file);
 
-    const req = new HttpRequest('POST', this.baseUrl + 'api/Hospitals/add_logo/'+orgId, formData, {
+    const req = new HttpRequest('POST', this.baseUrl + 'api/Tenant/add_logo/'+orgId, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -125,7 +120,7 @@ export class HospitalService {
     formData.append('formData', file);
     formData.append('key', key);
 
-    const req = new HttpRequest('POST', this.baseUrl + `api/Hospitals/upload/signature/${orgId}`, formData, {
+    const req = new HttpRequest('POST', this.baseUrl + `api/Tenant/upload/signature/${orgId}`, formData, {
       reportProgress: true,
       responseType: 'json'
     });
@@ -133,15 +128,15 @@ export class HospitalService {
   }
 
   SetSignature(id: number) {
-    return this.http.post(this.baseUrl + `api/Hospitals/set_signature/${id}`, {});
+    return this.http.post(this.baseUrl + `api/Tenant/set_signature/${id}`, {});
   }
 
   SetInvoice(id: number) {
-    return this.http.post(this.baseUrl + `api/Hospitals/set/letter/head/invoice/${id}`, {});
+    return this.http.post(this.baseUrl + `api/Tenant/set/letter/head/invoice/${id}`, {});
   }
 
   SetReceipt(id: number) {
-    return this.http.post(this.baseUrl + `api/Hospitals/set/letter/head/receipt/${id}`, {});
+    return this.http.post(this.baseUrl + `api/Tenant/set/letter/head/receipt/${id}`, {});
   }
 
   private handleError(error: HttpErrorResponse) {

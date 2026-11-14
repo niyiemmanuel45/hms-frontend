@@ -41,12 +41,6 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  getTenantUsers(tenantId: number, search: string, pagination: Pagination): Observable<PaginatedResult<User>>
-  {
-    return this.http.get<PaginatedResult<User>>(`${this.baseUrl}api/Users/agents/${tenantId}?Name=${search}&pageSize=${pagination.pageSize}&page=${pagination.page}`)
-      .pipe(catchError(this.handleError));
-  }
-
   getUserById(Id: string): Observable<User> {
     return this.http.get<User>(this.baseUrl + 'api/Users/'+ Id);
   }

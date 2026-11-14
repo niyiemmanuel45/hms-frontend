@@ -25,7 +25,7 @@ export class MedicineService {
 
   GetAllByCode(code: string, pagination: Pagination): Observable<PaginatedResult<Medicine>>
   {
-    return this.http.get<PaginatedResult<Medicine>>(`${this.baseUrl}api/Medicine/by-hospital/${code}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
+    return this.http.get<PaginatedResult<Medicine>>(`${this.baseUrl}api/Medicine/by-tenant/${code}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
     .pipe(catchError(this.handleError));
   }
 
