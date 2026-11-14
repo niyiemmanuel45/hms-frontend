@@ -19,7 +19,7 @@ export class BeneficiaryService {
 
   getByHospitalId(tenantId: number, pagination: Pagination): Observable<PaginatedResult<Beneficiary>>
   {
-    return this.http.get<PaginatedResult<Beneficiary>>(`${this.baseUrl}api/Beneficiary/hospital/${tenantId}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
+    return this.http.get<PaginatedResult<Beneficiary>>(`${this.baseUrl}api/Beneficiary/tenant/${tenantId}?pageSize=${pagination.pageSize}&pageNumber=${pagination.page}`)
     .pipe(catchError(this.handleError));
   }
 

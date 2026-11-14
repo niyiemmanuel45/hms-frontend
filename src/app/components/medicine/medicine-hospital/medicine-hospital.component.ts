@@ -50,7 +50,7 @@ export class MedicineHospitalComponent {
   ngOnInit():void {
     this.route.data.subscribe(data => {
       this.organization = data['organization'].responseData;
-      this.code = this.organization.code;
+      this.code = this.organization?.tenant?.orgCode || 'HPD';
       this.orgId = this.organization.id;
       // console.log(this.organization);
       this.GetDepartments(this.code);
