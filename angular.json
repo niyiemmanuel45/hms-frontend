@@ -29,7 +29,12 @@
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/plugins/bootstrap/js/bootstrap.bundle.min.js",
+              "src/assets/global/scripts/bootstrap-init.js",
+              "src/assets/global/scripts/app.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -60,6 +65,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "hms-client:build:development"
+          },
           "configurations": {
             "production": {
               "browserTarget": "hms-client:build:production"
@@ -67,8 +75,7 @@
             "development": {
               "browserTarget": "hms-client:build:development"
             }
-          },
-          "defaultConfiguration": "development"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -91,7 +98,12 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/plugins/bootstrap/js/bootstrap.bundle.min.js",
+              "src/assets/global/scripts/bootstrap-init.js",
+              "src/assets/global/scripts/app.min.js"
+            ]
           }
         }
       }
