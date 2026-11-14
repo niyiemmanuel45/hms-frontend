@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AddHospitalDto } from 'src/app/models/hospital';
 import { ICurrentUser } from 'src/app/models/icurrent-user';
 import { Pagination } from 'src/app/models/pagination';
+import { User } from 'src/app/models/user';
 import { AccountService } from 'src/app/services/account.service';
 import { CountryService } from 'src/app/services/country.service';
 import { HospitalService } from 'src/app/services/hospital.service';
@@ -18,12 +19,14 @@ export class OrgCreateComponent {
   countries: any = [];
   states: any = [];
   cities: any = [];
+  lgas: any = [];
   details: ICurrentUser[];
   userRoleStatus : string;
   hospital : AddHospitalDto;
   imageSrc: string;
   currentFile?: File;
   selectedFiles?: FileList;
+  tenantId: string;
 
   constructor(private hospitalServ : HospitalService,
     private fb: FormBuilder,
@@ -43,13 +46,21 @@ export class OrgCreateComponent {
     phoneNumber: FormControl;
     logoURL: FormControl;
     cityId: FormControl;
+    lgaId: FormControl;
     websiteURL: FormControl;
     stateId: FormControl;
     countryId: FormControl;
     address: FormControl;
 
   onChangeCountry(countryId: string) {
-    if (countryId) {
+    // reset the dependent dropdowns
+    this.insertForm.get('stateId')?.setValue('');
+    this.insertForm.get('cityId')?.setValue('');
+    this.insertForm.get('lgaId')?.setValue('');
+    this.cities = null;
+    this.lgas = null;
+
+    if (countryId && countryId !== '0') {
       this.countryServ.getStates(countryId).subscribe(
         data => {
           const {items} = data.responseData;
@@ -86,6 +97,7 @@ export class OrgCreateComponent {
     this.websiteURL = new FormControl('', [Validators.required]);
     this.stateId = new FormControl('', [Validators.required]);
     this.cityId = new FormControl('', [Validators.required]);
+    this.lgaId = new FormControl('', [Validators.required]);
     this.address = new FormControl('', [Validators.required]);
 
     this.insertForm = this.fb.group(
@@ -103,11 +115,24 @@ export class OrgCreateComponent {
       'countryId': this.countryId,
       'stateId': this.stateId,
       'cityId': this.cityId,
+      'lgaId': this.lgaId,
       'licenseNumber': this.licenseNumber
+    });
+
+    // capture the tenant the current user belongs to
+    this.acct.currentUser$.subscribe((user: User | null) => {
+      if (user && user.tenantId) {
+        this.tenantId = user.tenantId;
+      }
     });
   }
 
   onChangeCity(stateId: string) {
+    // reset the dependent dropdowns
+    this.insertForm.get('cityId')?.setValue('');
+    this.insertForm.get('lgaId')?.setValue('');
+    this.lgas = null;
+
     if (stateId) {
       this.countryServ.getCities(stateId).subscribe(
         data => {
@@ -117,6 +142,22 @@ export class OrgCreateComponent {
       );
     } else {
       this.cities = null;
+    }
+  }
+
+  onChangeLga(cityId: string) {
+    // reset the LGA selection
+    this.insertForm.get('lgaId')?.setValue('');
+
+    if (cityId) {
+      this.countryServ.GetLgasWithoutPage(cityId).subscribe(
+        data => {
+          const {items} = data.responseData;
+          this.lgas = items;
+        }
+      );
+    } else {
+      this.lgas = null;
     }
   }
 
@@ -138,6 +179,18 @@ export class OrgCreateComponent {
 
   onSubmit() {
     this.hospital = this.insertForm.value;
+
+    if (this.insertForm.invalid) {
+      this.insertForm.markAllAsTouched();
+      this.toastr.error('Please fill in all required fields.');
+      return;
+    }
+
+    if (!this.hospital.countryId || this.hospital.countryId === '0') {
+      this.toastr.error('Select a country');
+      return;
+    }
+
     const file: File | null = this.selectedFiles?.item(0)!;
     if(file === undefined){
       this.currentFile = null!;
@@ -145,9 +198,10 @@ export class OrgCreateComponent {
       this.currentFile = file;
     }
     this.hospital.logoURL = this.currentFile;
-    if(this.hospital.countryId == '0'){
-      this.toastr.error('Select a country');
-      this.router.navigate(['/feed/hospital/create']);
+    this.hospital.tenantId = this.tenantId || this.acct.currentUser?.tenantId;
+    if (!this.hospital.tenantId) {
+      this.toastr.error('Your organization could not be determined. Please log in again.');
+      return;
     }
     // console.log(this.currentFile);
     // console.log(this.hospital);

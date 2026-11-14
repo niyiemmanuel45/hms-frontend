@@ -22,6 +22,7 @@ export interface Hospital {
   director_health_signature_url: string;
   chief_health_officer_signature_url: string;
   city: City;
+  lga?: Lga;
   country: Country;
   state: Region;
   dateCreated: string;
@@ -43,6 +44,7 @@ export interface AddHospitalDto {
   stateId: string;
   cityId: string;
   lgaId: string;
+  tenantId: string;
 }
 
 export class UpdateHospitalDto {
@@ -59,6 +61,8 @@ export class UpdateHospitalDto {
   countryId: string;
   stateId: string;
   cityId: string;
+  lgaId: string;
+  tenantId: string;
 }
 
 export interface BloodGroups {
