@@ -17,6 +17,10 @@ export class HospitalService {
     return this.http.get<Hospital>(`${this.baseUrl}api/Hospitals/`+ Id);
   }
 
+  GetByTenant(tenantId: string): Observable<PaginatedResult<Hospital>> {
+    return this.http.get<PaginatedResult<Hospital>>(`${this.baseUrl}api/Hospitals/by-tenant/${tenantId}?pageSize=1&pageNumber=1`);
+  }
+
   GetByCode(code: string): Observable<SingleResult<Hospital>> {
     const headers = { 'tenantid': code, 'x-tenant-id': '' };
     return this.http.get<SingleResult<Hospital>>(`${this.baseUrl}api/Hospitals/code`, { headers });

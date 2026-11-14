@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ICurrentUser } from 'src/app/models/icurrent-user';
 import { AccountService } from 'src/app/services/account.service';
+import { HospitalService } from 'src/app/services/hospital.service';
 import { User } from 'src/app/models/user';
 
 @Component({
@@ -13,7 +14,7 @@ export class NavbarComponent {
   logoUrl : string;
   details: ICurrentUser[];
 
-  constructor(public acct: AccountService) { }
+  constructor(public acct: AccountService, private hospitalServ: HospitalService) { }
 
   ngOnInit():void {
     this.details = this.acct.TokenDecodeUserDetail();
@@ -41,21 +42,14 @@ export class NavbarComponent {
   }
 
   GetHospitalByTenantId(tenantId: string) {
-    // Since the /api/Hospitals/code endpoint doesn't work, try using GetById with tenantId
-    // Note: tenantId is a string but the API might expect a number, so we'll try both approaches
-    const hospitalId = parseInt(tenantId);
-
-    if (!isNaN(hospitalId)) {
-      // Try to get hospital by ID
-      this.acct.getCurrentUserById(tenantId);
-      // Note: This is a workaround since the actual hospital service methods aren't working
-      // In a real scenario, we'd use: this.hospitalServ.GetById(hospitalId)
+    // fetch the hospital for the tenant and use its logo (falls back to the default)
+    this.hospitalServ.GetByTenant(tenantId).subscribe(response => {
+      const hospitals = response?.responseData?.items || [];
+      const hospital = hospitals[0];
+      this.logoUrl = hospital && hospital.logoURL ? hospital.logoURL : '/assets/admin/admintemplates/img/carelogo.jpg';
+    }, error => {
       this.logoUrl = '/assets/admin/admintemplates/img/carelogo.jpg';
-      console.log('Using default logo due to API limitations');
-    } else {
-      this.logoUrl = '/assets/admin/admintemplates/img/carelogo.jpg';
-      console.log('Invalid tenantId, using default logo');
-    }
+    });
   }
 
   onLogout() {

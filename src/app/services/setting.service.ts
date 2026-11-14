@@ -14,28 +14,28 @@ export class SettingService {
   constructor(private http: HttpClient) { }
 
   GetSettingById(Id: number): Observable<OrganizationSetting> {
-    return this.http.get<OrganizationSetting>(`${this.baseUrl}api/HospitalSettings/`+ Id);
+    return this.http.get<OrganizationSetting>(`${this.baseUrl}api/TenantSettings/`+ Id);
   }
   GetSettings(id:number): Observable<Setting>
   {
-    return this.http.get<Setting>(this.baseUrl + 'api/HospitalSettings/settings/'+id);
+    return this.http.get<Setting>(`${this.baseUrl}api/TenantSettings/tenant_settings/${id}`);
   }
 
   AddSettings(orgCode: string, model: any) {
-    return this.http.post(this.baseUrl + `api/HospitalSettings/create?orgCode=${orgCode}`, model, { responseType: "json" });
+    return this.http.post(this.baseUrl + `api/TenantSettings/create?orgCode=${orgCode}`, model, { responseType: "json" });
   }
 
   UpdateSettings(id: number, edit: any) {
-    return this.http.put(this.baseUrl + 'api/HospitalSettings/update/'+ id, edit, { responseType: "json" });
+    return this.http.put(this.baseUrl + 'api/TenantSettings/update/'+ id, edit, { responseType: "json" });
   }
 
   CheckIfASettingisProfiled(orgId: number, condtion: string) {
-    return this.http.get(this.baseUrl + `api/HospitalSettings/check_if_profiled/${orgId}?condition=${condtion}`)
+    return this.http.get(this.baseUrl + `api/TenantSettings/check_if_profiled/${orgId}?condition=${condtion}`)
     .pipe(catchError(this.handleError));
   }
 
   DeleteSettings(id: number) {
-    return this.http.delete(this.baseUrl + 'api/HospitalSettings/'+ id);
+    return this.http.delete(this.baseUrl + 'api/TenantSettings/'+ id);
   }
 
   private handleError(error: HttpErrorResponse) {

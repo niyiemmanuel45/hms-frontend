@@ -153,7 +153,15 @@ export class OrgCreateComponent {
       this.countryServ.GetLgasWithoutPage(cityId).subscribe(
         data => {
           const {items} = data.responseData;
-          this.lgas = items;
+          this.lgas = items || [];
+          if (this.lgas.length === 0) {
+            this.toastr.info('No LGAs available for this city yet');
+          }
+        },
+        error => {
+          this.lgas = [];
+          console.error('Unable to load LGAs', error);
+          this.toastr.error('Unable to load LGAs, please try again');
         }
       );
     } else {

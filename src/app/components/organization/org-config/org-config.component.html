@@ -163,8 +163,8 @@
                                     </tr>
                                 </table>
                             </div>
-                            <input type="hidden" name="orgCode" [(ngModel)]="organization.code"/>
-                            <input type="hidden" name="id" [(ngModel)]="organization.id"/>
+                            <input type="hidden" name="orgCode" [(ngModel)]="tenantCode"/>
+                            <input type="hidden" name="id" [(ngModel)]="tenantId"/>
                             <button type="submit" class="btn btn-success">Add Settings</button>
                         </form>
                     </div>
@@ -190,7 +190,7 @@
                                         <td>{{item.parameter}}</td>
                                         <td>{{item.value}}</td>
                                         <td>
-                                            <button type="button" (click)="deleteConfig(item, organization.id)" *ngIf="userRoleStatus == 'power_user'" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                            <button type="button" (click)="deleteConfig(item)" *ngIf="userRoleStatus == 'power_user'" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
                                 </ng-container>
