@@ -72,7 +72,7 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="exampleInputEmail10">Country</label>
-                      <select name="countryId" [(ngModel)]="hospital.country.id"  class="form-control boxs-style" (change)="onChangeCountry($any($event).target.value)">
+                      <select name="countryId" [(ngModel)]="countryId"  class="form-control boxs-style" (change)="onChangeCountry($any($event).target.value)">
                           <option value="0">Select a country</option>
                           <option *ngFor="let country of countries" [value]="country.id">{{country.name}}</option>
                       </select>
@@ -81,7 +81,8 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="exampleInputEmail10">State</label>
-                      <select name="stateId" [(ngModel)]="hospital.state.id"  class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                      <select name="stateId" [(ngModel)]="stateId"  class="form-control boxs-style" (change)="onChangeCity($any($event).target.value)">
+                          <option value="">Select a state</option>
                           <option *ngFor="let state of states" [value]="state.id">{{state.name}}</option>
                       </select>
                     </div>
@@ -89,8 +90,20 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <label for="exampleInputEmail10">City</label>
-                      <select name="cityId" [(ngModel)]="hospital.city.id"  class="form-control boxs-style">
+                      <select name="cityId" [(ngModel)]="cityId"  class="form-control boxs-style" (change)="onChangeLga($any($event).target.value)">
+                          <option value="">Select a city</option>
                           <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="exampleInputEmail10">LGA</label>
+                      <select name="lgaId" [(ngModel)]="lgaId"  class="form-control boxs-style">
+                          <option value="">Select an LGA</option>
+                          <option *ngFor="let lga of lgas" [value]="lga.id">{{lga.name}}</option>
                       </select>
                     </div>
                   </div>

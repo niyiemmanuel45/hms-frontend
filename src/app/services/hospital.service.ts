@@ -32,7 +32,9 @@ export class HospitalService {
   {
     const formData: FormData = new FormData();
 
-    formData.append('LogoURL', file);
+    if (file) {
+      formData.append('LogoURL', file);
+    }
     formData.append('Name', model.name);
     formData.append('Code', model.code);
     formData.append('Slogan', model.slogan);
@@ -44,9 +46,14 @@ export class HospitalService {
     formData.append('WebsiteURL', model.websiteURL);
     formData.append('PhoneNumber', model.phoneNumber);
     formData.append('CityId', model.cityId);
-    formData.append('LgaId', model.lgaId);
+    if (model.lgaId) {
+      formData.append('LgaId', model.lgaId);
+    }
     formData.append('StateId', model.stateId);
     formData.append('CountryId', model.countryId);
+    if (model.tenantId) {
+      formData.append('TenantId', model.tenantId);
+    }
 
     const req = new HttpRequest('POST', this.baseUrl + 'api/Hospitals/create', formData, {
       reportProgress: true,
@@ -59,7 +66,9 @@ export class HospitalService {
   {
     const formData: FormData = new FormData();
 
-    formData.append('LogoURL', file);
+    if (file) {
+      formData.append('LogoURL', file);
+    }
     formData.append('Name', model.name);
     formData.append('Code', model.code);
     formData.append('Slogan', model.slogan);
@@ -71,8 +80,14 @@ export class HospitalService {
     formData.append('WebsiteURL', model.websiteURL);
     formData.append('PhoneNumber', model.phoneNumber);
     formData.append('CityId', model.cityId);
+    if (model.lgaId) {
+      formData.append('LgaId', model.lgaId);
+    }
     formData.append('StateId', model.stateId);
     formData.append('CountryId', model.countryId);
+    if (model.tenantId) {
+      formData.append('TenantId', model.tenantId);
+    }
 
     const req = new HttpRequest('PUT', this.baseUrl + 'api/Hospitals/'+id, formData, {
       reportProgress: true,
