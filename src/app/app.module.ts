@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/auth/login/login.component';
+import { InviteComponent } from './components/auth/invite/invite.component';
 import { FooterComponent } from './components/layouts/footer/footer.component';
 import { MasterComponent } from './components/layouts/master/master.component';
 import { NavbarComponent } from './components/layouts/navbar/navbar.component';
@@ -81,6 +82,7 @@ import { PatientTransactionComponent } from './components/transactions/patient-t
   declarations: [
     AppComponent,
     LoginComponent,
+    InviteComponent,
     FooterComponent,
     MasterComponent,
     NavbarComponent,

@@ -8,7 +8,8 @@ export class TokenInterceptor implements HttpInterceptor {
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const tenantId = environment.appid;
+    // Prefer the tenant code persisted from login (over the default HPD)
+    const tenantId = localStorage.getItem('tenantCode') || environment.appid;
     const modifiedReq = req.clone({
         headers: req.headers.set('x-tenant-id', `${tenantId}`),
     });

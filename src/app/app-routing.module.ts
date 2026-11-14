@@ -6,11 +6,13 @@ import { AccessDeniedComponent } from './components/errors/access-denied/access-
 import { NotFoundComponent } from './components/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './components/errors/server-error/server-error.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
+import { InviteComponent } from './components/auth/invite/invite.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'feed', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    { path: 'forgot-password"', component: ForgotPasswordComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
+    { path: 'invite', component: InviteComponent },
     { path: 'feed', loadChildren: () => MasterRoutingModule },
     { path: 'access-denied', component: AccessDeniedComponent },
     {path: 'not-found', component: NotFoundComponent},

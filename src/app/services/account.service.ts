@@ -54,11 +54,24 @@ export class AccountService {
           localStorage.setItem('loginStatus', '1');
           localStorage.setItem('jwt', result.access_token.token);
           localStorage.setItem('refreshToken', result.access_token.refresh_token);
+          this.setTenantCodeFromJwt(result.access_token.token);
           this.setCurrentUser(this.currentUser);
         }
         return result;
       })
     );
+  }
+
+  setTenantCodeFromJwt(token: string): void {
+    try {
+      const decode = this.helper.decodeToken(token ?? '');
+      const code = decode?.tenantid;
+      if (code) {
+        localStorage.setItem('tenantCode', code);
+      }
+    } catch (_err) {
+      // Leave fallback in place — environment.appid is used if no tenantCode is stored
+    }
   }
 
   getCurrentUserById(userId: string) {
@@ -94,6 +107,7 @@ export class AccountService {
               localStorage.setItem('loginStatus', '1');
               localStorage.setItem('jwt', result.access_token.token);
               localStorage.setItem('refreshToken', result.access_token.refresh_token);
+              this.setTenantCodeFromJwt(result.access_token.token);
             }
             return <any>result;
         })
@@ -108,6 +122,7 @@ export class AccountService {
     localStorage.removeItem('expire');
     localStorage.removeItem('jwt');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('tenantCode');
     // this.toast.success("See you some other time", "Goodbye");
     this.router.navigate(['/login']);
   }
